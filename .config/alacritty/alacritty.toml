@@ -1,1 +1,10 @@
 shell = "/bin/fish"
+
+[window]
+
+padding = { x = 10, y = 10 }
+opacity = 0.7
+
+[font]
+
+normal = { family = "CaskaydiaCoveNerdFontMono"}
