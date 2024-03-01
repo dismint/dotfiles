@@ -1,0 +1,126 @@
+// <span font-family=\"Font Awesome 6 Pro Regular\">{icon}</span>
+{
+  // basic settings
+  "layer": "top",
+  "position": "top",
+  "height": 55,
+  "spacing": 0,
+  "margin": "10 10 0 10",
+
+  // modules
+  "modules-left": [
+    "hyprland/workspaces",
+    "hyprland/window",
+  ],
+  "modules-center": [
+    "clock",
+  ],
+  "modules-right": [
+    "tray",
+    "battery",
+    "network",
+    "pulseaudio",
+    "backlight",
+    "cpu",
+    "memory",
+    "temperature",
+  ],
+
+  // module config
+  "hyprland/workspaces": {
+    "disable-scroll": true,
+    "all-outputs": true,
+    "warp-on-scroll": false,
+    "format": "{icon}",
+    "format-icons": {
+      "1": "",
+      "2": "",
+      "3": "",
+      "4": "",
+      "5": "",
+      "6": "",
+      "7": "",
+      "8": "",
+      "9": "",
+      "10": "",
+      "DISCORD": "",
+      "urgent": "",
+      "active": "",
+      "default": ""
+    }
+  },
+  "hyprland/window": {
+    "format": "{class}",
+  },
+  "tray": {
+    "icon-size"         : 25,
+    "spacing"           : 10,
+  },
+  "clock": {
+    "interval": 1,
+    "format": "{:%I:%M:%S}",
+    "format-alt": "{:%Y-%m-%d}",
+    "tooltip": false,
+  },
+  "cpu": {
+    "format": "{usage}% <span font-family=\"Font Awesome 6 Pro Regular\"></span>",
+    "tooltip": false
+  },
+  "memory": {
+    "format": "{}% <span font-family=\"Font Awesome 6 Pro Solid\"></span>"
+  },
+  "temperature": {
+    "tooltip": false,
+    "critical-threshold": 80,
+    "format": "{temperatureC}°C {icon}",
+    "format-icons": ["", "", ""]
+  },
+  "backlight": {
+    "tooltip": false,
+    "format": "{percent}% {icon}",
+    "format-icons": [
+      "<span font-family=\"Font Awesome 6 Pro Regular\"></span>",
+      "<span font-family=\"Font Awesome 6 Pro Regular\"></span>",
+      "<span font-family=\"Font Awesome 6 Pro Regular\"></span>",
+      "<span font-family=\"Font Awesome 6 Pro Regular\"></span>",
+      "<span font-family=\"Font Awesome 6 Pro Solid\"></span>",
+    ]
+  },
+  "battery": {
+    "states": {
+      "good": 95,
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{capacity}% <span font-family=\"Font Awesome 6 Pro Solid\">{icon}</span>",
+    "format-charging": "{capacity}% <span font-family=\"Font Awesome 6 Pro Solid\"></span>",
+    "format-alt": "{time} <span font-family=\"Font Awesome 6 Pro Solid\">{icon}</span>",
+    "format-icons": ["", "", "", "", ""]
+  },
+  "network": {
+    "format-wifi": "<span font-family=\"Font Awesome 6 Pro Solid\"></span>",
+    "format-ethernet": "{ipaddr}/{cidr} ",
+    "tooltip-format": "{essid} ({signalStrength}%)",
+    "format-linked": "{ifname} (No IP) ",
+    "format-disconnected": "<span font-family=\"Font Awesome 6 Pro Solid\"></span>",
+    "format-alt": "{ifname}: {ipaddr}/{cidr}"
+  },
+  "pulseaudio": {
+    "format": "{volume}% <span font-family=\"Font Awesome 6 Pro Solid\">{icon}</span>",
+    "format-bluetooth": "{volume}% {icon} {format_source}",
+    "format-muted": "{volume}% <span font-family=\"Font Awesome 6 Pro Solid\"></span>",
+    "format-source": "{volume}% ",
+    "format-source-muted": "",
+    "format-icons": {
+      "headphone": "",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": ["", "", "", ""]
+    },
+    "on-click": "pavucontrol"
+  },
+}
+
