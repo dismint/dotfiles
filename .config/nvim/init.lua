@@ -114,8 +114,8 @@ vg.typst_pdf_viewer = "zathura"
 vo.expandtab = true
 vo.smartindent = true
 vo.autoindent = true
-vo.tabstop = 2
-vo.shiftwidth = 2
+vo.tabstop = 4
+vo.shiftwidth = 4
 
 vo.number = true
 vo.relativenumber = true
