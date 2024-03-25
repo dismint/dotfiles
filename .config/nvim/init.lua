@@ -47,8 +47,6 @@ end)
 -- packages that actually need setup
 -- 	╚(•⌂•)╝ 🍁 🍂 🍃🙐 something!
 
-search jsvicky on 'search for emojis' for more!
-
 require('snippy').setup({
   mappings = {
     is = {
