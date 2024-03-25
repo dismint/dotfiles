@@ -34,6 +34,8 @@ require('packer').startup(function(use)
   use 'nvim-lualine/lualine.nvim'
   use 'nvim-tree/nvim-tree.lua'
   use 'romgrk/barbar.nvim'
+  use 'neovim/nvim-lspconfig'
+  use 'nvim-treesitter/nvim-treesitter'
   -- typst
   use {'kaarmu/typst.vim', ft = {'typst'}}
 
@@ -42,8 +44,10 @@ require('packer').startup(function(use)
     require('packer').sync()
   end
 end)
-
 -- packages that actually need setup
+-- 	╚(•⌂•)╝ 🍁 🍂 🍃🙐 something!
+
+search jsvicky on 'search for emojis' for more!
 
 require('snippy').setup({
   mappings = {
@@ -95,6 +99,7 @@ map('n', '<A-3>', '<Cmd>BufferGoto 3<CR>', opts)
 map('n', '<A-4>', '<Cmd>BufferGoto 4<CR>', opts)
 map('n', '<A-5>', '<Cmd>BufferGoto 5<CR>', opts)
 map('n', '<A-c>', '<Cmd>BufferClose<CR>', opts)
+map('n', '<A-s>', ":call CocAction('format')<CR>", opts)
 
 -- configuration --
 
@@ -122,8 +127,8 @@ vo.relativenumber = true
 
 vo.scrolloff = 6
 
--- vo.cursorline = true
--- vo.cursorcolumn = true
+vo.cursorline = true
+vo.cursorcolumn = true
 
 vo.guifont = "CaskaydiaCove Nerd Font Mono"
 
