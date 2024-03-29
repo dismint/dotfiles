@@ -4,5 +4,6 @@
         "command": "/home/dismint/.local/share/nvim/mason/bin/typst-lsp",
         "filetypes": ["typst"]
         }
-    }
+    },
+    "rust-analyzer.checkOnSave.allTargets": true
 }
