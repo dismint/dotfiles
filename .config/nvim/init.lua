@@ -47,6 +47,7 @@ require("lazy").setup({
   "dstein64/nvim-scrollview",
   "fnune/recall.nvim",
   "kylechui/nvim-surround",
+  "mhartington/formatter.nvim",
   "lewis6991/gitsigns.nvim",
   {
     "nvim-telescope/telescope.nvim",
@@ -56,12 +57,12 @@ require("lazy").setup({
   {
     "nanozuki/tabby.nvim",
     dependencies = "nvim-tree/nvim-web-devicons",
-     config = function()
-    -- configs...
-  end,
+    config = function()
+      -- configs...
+    end,
   },
   -- completion
-  "hrsh7th/nvim-cmp" ,
+  "hrsh7th/nvim-cmp",
   -- completion sources
   "hrsh7th/cmp-nvim-lsp",
   "hrsh7th/cmp-nvim-lua",
@@ -71,7 +72,7 @@ require("lazy").setup({
   "hrsh7th/cmp-buffer",
   "hrsh7th/vim-vsnip",
   -- languages
-  {"kaarmu/typst.vim", ft = {"typst"}, lazy = false },
+  { "kaarmu/typst.vim",  ft = { "typst" }, lazy = false },
   { "folke/neodev.nvim", opts = {} },
   "mrcjkb/rustaceanvim",
   -- colorschemes
@@ -94,11 +95,11 @@ require("snippy").setup({
 })
 
 require("cmp").setup({
-	snippet = {
-		expand = function(args)
-			require("snippy").expand_snippet(args.body)
-		end,
-	},
+  snippet = {
+    expand = function(args)
+      require("snippy").expand_snippet(args.body)
+    end,
+  },
   mapping = {
     ["<A-k>"] = require("cmp").mapping.select_prev_item(),
     ["<A-j>"] = require("cmp").mapping.select_next_item(),
@@ -164,7 +165,7 @@ require("lualine").setup {
 }
 
 require("nvim-web-devicons").setup {
-  strict = true;
+  strict = true,
 }
 
 require("kanagawa").setup({
@@ -212,6 +213,14 @@ require("telescope").setup {
   },
 }
 
+require("formatter").setup {
+  filetype = {
+    python = {
+      require("formatter.filetypes.python").autopep8,
+    },
+  }
+}
+
 require("nvim_comment").setup()
 require("mason").setup()
 require("mason-lspconfig").setup()
@@ -221,18 +230,20 @@ require("gitsigns").setup()
 require("recall").setup()
 require("nvim-surround").setup()
 
-require("lspconfig").typst_lsp.setup{}
-require("lspconfig").pyright.setup{}
-require("lspconfig").gopls.setup{}
+require("lspconfig").typst_lsp.setup {}
+require("lspconfig").pyright.setup {}
+require("lspconfig").gopls.setup {}
 require("lspconfig").lua_ls.setup {
-  -- on_attach, etc.
   settings = {
     Lua = {
       diagnostics = {
-        disable = {"missing-fields"},
+        disable = { "missing-fields" },
       },
     },
   }
+}
+vim.g.rustaceanvim = {
+  server = {}
 }
 
 -- keybinds --
@@ -242,9 +253,9 @@ local opts = { noremap = true, silent = true }
 
 map("n", "<leader>ee", ":NvimTreeToggle<CR>", opts)
 map("n", "<A-c>", ":bd<CR>", opts)
-map("n", "<A-f>", ":call CocAction('format')<CR>", opts)
 map("i", "<A-t>", "| 🙑  dismint<CR>| YW5uaWUgPDM=", opts)
 map("n", "<A-h>", vim.diagnostic.open_float, opts)
+map("n", "<A-f>", ":Format<CR>", opts)
 map("n", ",", "@@", opts)
 
 local builtin = require("telescope.builtin")
@@ -272,8 +283,8 @@ vg.typst_pdf_viewer = "zathura"
 vo.expandtab = true
 vo.smartindent = true
 vo.autoindent = true
-vo.tabstop = 2
-vo.shiftwidth = 2
+-- vo.tabstop = 2
+-- vo.shiftwidth = 2
 
 vo.number = true
 vo.relativenumber = true
@@ -294,7 +305,22 @@ vg.everforest_background = "hard"
 vo.background = "dark"
 vim.cmd([[colorscheme kanagawa-dragon]])
 
--- auto close
+-- scripts
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "lua",
+  callback = function()
+    vim.opt_local.shiftwidth = 2
+    vim.opt_local.softtabstop = 2
+    vim.opt_local.expandtab = true
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+  callback = function()
+    vim.lsp.buf.format { async = false }
+  end
+})
 
 -- local function is_modified_buffer_open(buffers)
 --   for _, v in pairs(buffers) do
