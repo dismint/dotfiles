@@ -255,8 +255,18 @@ map("n", "<leader>ee", ":NvimTreeToggle<CR>", opts)
 map("n", "<A-c>", ":bd<CR>", opts)
 map("i", "<A-t>", "| 🙑  dismint<CR>| YW5uaWUgPDM=", opts)
 map("n", "<A-h>", vim.diagnostic.open_float, opts)
+map("n", "<A-e>", vim.lsp.buf.hover, opts)
 map("n", "<A-f>", ":Format<CR>", opts)
 map("n", ",", "@@", opts)
+
+map("n", "<A-1>", "1gt", opts)
+map("n", "<A-2>", "2gt", opts)
+map("n", "<A-3>", "3gt", opts)
+map("n", "<A-4>", "4gt", opts)
+map("n", "<A-5>", "5gt", opts)
+
+map("n", "<A-m>", "ml", opts)
+map("n", "<A-M>", "'l", opts)
 
 local builtin = require("telescope.builtin")
 map("n", "<leader>ff", builtin.find_files, opts)
@@ -306,6 +316,16 @@ vo.background = "dark"
 vim.cmd([[colorscheme kanagawa-dragon]])
 
 -- scripts
+
+local function smart_gd()
+  local clients = vim.lsp.get_active_clients()
+  if next(clients) ~= nil then
+    vim.lsp.buf.definition()
+  else
+    vim.cmd('normal! gd')
+  end
+end
+map('n', 'gd', smart_gd, opts)
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "lua",
