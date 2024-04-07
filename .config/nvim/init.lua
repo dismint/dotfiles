@@ -230,7 +230,11 @@ require("gitsigns").setup()
 require("recall").setup()
 require("nvim-surround").setup()
 
-require("lspconfig").typst_lsp.setup {}
+-- require("lspconfig").typst_lsp.setup {
+--   -- settings = {
+--   --   exportPdf = "onType"
+--   -- },
+-- }
 require("lspconfig").pyright.setup {}
 require("lspconfig").gopls.setup {}
 require("lspconfig").lua_ls.setup {
@@ -316,6 +320,8 @@ vo.background = "dark"
 vim.cmd([[colorscheme kanagawa-dragon]])
 
 -- scripts
+
+-- vim.cmd [[au BufRead,BufNewFile *.typ set filetype=typst]]
 
 local function smart_gd()
   local clients = vim.lsp.get_active_clients()
