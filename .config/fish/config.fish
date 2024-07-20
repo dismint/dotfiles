@@ -16,7 +16,15 @@ function ocamlrun
   ocamlc -o $filename $filename.ml && ./$filename
 end
 
+# init / setup
+
 eval (opam env)
+
+zoxide init fish | source
+
+# aliases
+
+alias cd="z"
 
 # tide configuration
 
