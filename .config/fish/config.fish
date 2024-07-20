@@ -1,7 +1,3 @@
-if status is-interactive
-    # Commands to run in interactive sessions can go here
-end
-
 if test -f ~/.bash_profile
     source ~/.bash_profile; or true
 end
