@@ -4,6 +4,12 @@
 
 </div>
 
+- [Overview](#overview)
+- [`nvim`](#-nvim-)
+  * [Dependencies](#dependencies)
+  * [Post Setup](#post-setup)
+- [`fish`](#-fish-)
+
 # Overview
 
 This is a collection of my dotfiles and other configuration files I use in various parts of my EndeavourOS + Hyprland setup. Primarily for personal use but let me know if you happen to find something useful in here for yourself!
@@ -19,7 +25,7 @@ My configuration is contained within one file and aims to be as self contained a
 - `nodejs` for some language servers
 - `ripgrep` for better grep
 
-# Post Setup
+## Post Setup
 - `:Copilot`
 
 # `fish`
