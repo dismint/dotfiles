@@ -8,7 +8,7 @@
 
 This is a collection of my dotfiles and other configuration files I use in various parts of my EndeavourOS + Hyprland setup. Primarily for personal use but let me know if you happen to find something useful in here for yourself!
 
-I traditionally use [GNU Stow](https://www.gnu.org/software/stow/) to manage my dotfiles.
+I traditionally use [GNU Stow](https://www.gnu.org/software/stow/) to manage my dotfiles on my system.
 
 # `nvim`
 
