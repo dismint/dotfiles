@@ -1,11 +1,7 @@
 <div align="center">
   
-# dotfiles
+# dotfiles\
 
-Personal dotfiles
-
-[![Static Badge](https://img.shields.io/badge/TRENDS2-%23082157?style=for-the-badge&logoSize=auto)](https://web-apps.citadelgroup.com/equities/trends-two)
-[![Static Badge](https://img.shields.io/badge/CONTACT-%23082157?style=for-the-badge&logoSize=auto)](mailto:eq-rm-analytics@citadel.com)
 </div>
 
 ---
