@@ -4,33 +4,17 @@
 
 </div>
 
-# 📊 Overview
-
-
-# dismint's dotfiles
+# Overview
 
 This is a collection of my dotfiles and other configuration files I use in various parts of my EndeavourOS + Hyprland setup. Primarily for personal use but let me know if you happen to find something useful in here for yourself!
 
-> [!WARNING]
-The next part is mostly stupid things for myself so pay no note :D
+# `nvim`
 
-## fish 
+My configuration is contained within one file and aims to be as self contained as possible
+
+
+# `fish`
 
 To complete the setup, installer [fisher](https://github.com/jorgebucaran/fisher), which can then be used to install [tide](https://github.com/IlanCosman/tide). My tide setup is as follows:
 
-- (1) Lean
-- (2) 16 colors
-- (2) 24-hour format
-- (2) Two lines
-- (2) Dotted
-- (2) Sparse
-- (2) Many icons
-- (2) Yes (to transient prompt)
-
-## waybar
-
-In order for the waybar to work properly, the system needs to have **AwesomeFont** installed. I trust that I can ~~pirate~~ attain this legally in the future as well.
-
-## nvim
-
-Yeah this one is a mess and needs some work...
+`tide configure --auto --style=Classic --prompt_colors='True color' --classic_prompt_color=Light --show_time='12-hour format' --classic_prompt_separators=Angled --powerline_prompt_heads=Sharp --powerline_prompt_tails=Flat --powerline_prompt_style='Two lines, character and frame' --prompt_connection=Solid --powerline_right_prompt_frame=No --prompt_connection_andor_frame_color=Lightest --prompt_spacing=Sparse --icons='Many icons' --transient=Yes`
