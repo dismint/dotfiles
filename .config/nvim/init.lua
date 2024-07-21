@@ -2,7 +2,6 @@
 -- | YW5uaWUgPDM=
 
 vim.keymap.set("i", "<C-j>", "| 🙑  dismint<CR>| YW5uaWUgPDM=")
-
 -- SECTION: config
 
 vim.g.mapleader = " "
@@ -26,7 +25,7 @@ vim.opt.colorcolumn = "80"
 vim.opt.scrolloff = 10
 
 vim.opt.updatetime = 250
-vim.opt.timeoutlen = 250
+vim.opt.timeoutlen = 500
 vim.opt.undofile = true
 vim.opt.termguicolors = true
 vim.g.have_nerd_font = true
@@ -45,8 +44,8 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 })
 
 vim.api.nvim_create_autocmd("TextYankPost", {
-	desc = "Highlight when yanking (copying) text",
-	group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+	desc = "highlight when yanking (copying) text",
+	group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
 	callback = function()
 		vim.highlight.on_yank()
 	end,
@@ -172,7 +171,7 @@ require("lazy").setup({
 			highlight = {
 				enable = true,
 			},
-			indent = { enable = true, disable = { "ocaml", "zig" } },
+			indent = { enable = false },
 		},
 		config = function(_, opts)
 			require("nvim-treesitter.install").prefer_git = true
@@ -389,7 +388,9 @@ require("lazy").setup({
 	},
 	{
 		"nvim-lualine/lualine.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
+		dependencies = {
+			{ "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
+		},
 		opts = {
 			options = {
 				icons_enabled = vim.g.have_nerd_font,
@@ -425,20 +426,6 @@ require("lazy").setup({
 		},
 	},
 	{
-		"folke/noice.nvim",
-		event = "VeryLazy",
-		opts = {
-			presets = {
-				bottom_search = true,
-				command_palette = true,
-			},
-		},
-		dependencies = {
-			"MunifTanjim/nui.nvim",
-			"rcarriga/nvim-notify",
-		},
-	},
-	{
 		"ggandor/leap.nvim",
 		config = function()
 			local leap = require("leap")
@@ -463,11 +450,11 @@ require("lazy").setup({
 			{ "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
 		},
 	},
-	{
-		"brenoprata10/nvim-highlight-colors",
-		opts = {},
-	},
+	{ "dstein64/nvim-scrollview", opts = {} },
+	{ "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
+	{ "brenoprata10/nvim-highlight-colors", opts = {} },
 	{ "lewis6991/gitsigns.nvim", opts = {} },
+	{ "stevearc/dressing.nvim", opts = {} },
 	"github/copilot.vim",
 	"mbbill/undotree",
 })
