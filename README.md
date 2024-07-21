@@ -1,3 +1,22 @@
+<div align="center">
+  
+# dotfiles
+
+Personal dotfiles
+
+![Static Badge](https://img.shields.io/badge/ORGANIZATION-Citadel-%23082157?logoSize=auto)
+![Static Badge](https://img.shields.io/badge/DEPARTMENT-Equities-%231041B3?logoSize=auto)
+![Static Badge](https://img.shields.io/badge/TEAM-Analytics-%234D8FFF?logoSize=auto)
+
+[![Static Badge](https://img.shields.io/badge/TRENDS2-%23082157?style=for-the-badge&logoSize=auto)](https://web-apps.citadelgroup.com/equities/trends-two)
+[![Static Badge](https://img.shields.io/badge/CONTACT-%23082157?style=for-the-badge&logoSize=auto)](mailto:eq-rm-analytics@citadel.com)
+</div>
+
+---
+
+# 📊 Overview
+
+
 # dismint's dotfiles
 
 This is a collection of my dotfiles and other configuration files I use in various parts of my EndeavourOS + Hyprland setup. Primarily for personal use but let me know if you happen to find something useful in here for yourself!
