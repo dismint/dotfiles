@@ -8,10 +8,19 @@
 
 This is a collection of my dotfiles and other configuration files I use in various parts of my EndeavourOS + Hyprland setup. Primarily for personal use but let me know if you happen to find something useful in here for yourself!
 
+I traditionally use [GNU Stow](https://www.gnu.org/software/stow/) to manage my dotfiles.
+
 # `nvim`
 
-My configuration is contained within one file and aims to be as self contained as possible
+My configuration is contained within one file and aims to be as self contained as possible, downloading both the plugins and their manager automatically.
 
+## Dependencies
+
+- `nodejs` for some language servers
+- `ripgrep` for better grep
+
+# Post Setup
+- `:Copilot`
 
 # `fish`
 
