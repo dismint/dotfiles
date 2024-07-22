@@ -129,7 +129,11 @@ require("lazy").setup({
 						) or vim.loop.os_homedir()
 					end,
 				},
-				zls = {},
+				zls = {
+					root_dir = function(fname)
+						return require("lspconfig").util.root_pattern(".git")(fname) or vim.loop.os_homedir()
+					end,
+				},
 				lua_ls = {
 					settings = {
 						Lua = {
