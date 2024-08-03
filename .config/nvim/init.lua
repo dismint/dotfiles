@@ -62,6 +62,32 @@ local nmap = function(keys, func, desc)
 	nomap(keys, func, desc, {})
 end
 
+local attachBindings = function(bufnr, client)
+	local lspmap = function(keys, func, desc)
+		nomap(keys, func, desc, { buffer = bufnr })
+	end
+
+	local tb = require("telescope.builtin")
+	lspmap("gd", tb.lsp_definitions, "[g]oto [d]efinition") -- <C-t> jumps back
+	lspmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+	lspmap("gr", tb.lsp_references, "[g]oto [r]eferences")
+	lspmap("gI", tb.lsp_implementations, "[g]oto [I]mplementation")
+	lspmap("<leader>td", tb.lsp_type_definitions, "[t]ype [d]efinition")
+	lspmap("<leader>ds", tb.lsp_document_symbols, "[d]ocument [s]ymbols")
+	lspmap("<leader>ws", tb.lsp_dynamic_workspace_symbols, "[w]work [s]ymbols")
+
+	lspmap("<leader>rn", vim.lsp.buf.rename, "[r]e[n]ame")
+	lspmap("<leader>ca", vim.lsp.buf.code_action, "[c]ode [a]ction")
+	lspmap("K", vim.lsp.buf.hover, "hover lsp documentation")
+	lspmap("<leader>hd", vim.diagnostic.open_float, "[h]over [d]iagnostic")
+
+	if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
+		lspmap("<leader>th", function()
+			vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({}))
+		end, "[t]oggle inlay [h]ints")
+	end
+end
+
 -- SECTION: plugins
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -85,30 +111,8 @@ require("lazy").setup({
 			vim.api.nvim_create_autocmd("LspAttach", {
 				group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
 				callback = function(event)
-					local lspmap = function(keys, func, desc)
-						nomap(keys, func, desc, { buffer = event.buf })
-					end
-
-					local tb = require("telescope.builtin")
-					lspmap("gd", tb.lsp_definitions, "[g]oto [d]efinition") -- <C-t> jumps back
-					lspmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-					lspmap("gr", tb.lsp_references, "[g]oto [r]eferences")
-					lspmap("gI", tb.lsp_implementations, "[g]oto [I]mplementation")
-					lspmap("<leader>td", tb.lsp_type_definitions, "[t]ype [d]efinition")
-					lspmap("<leader>ds", tb.lsp_document_symbols, "[d]ocument [s]ymbols")
-					lspmap("<leader>ws", tb.lsp_dynamic_workspace_symbols, "[w]work [s]ymbols")
-
-					lspmap("<leader>rn", vim.lsp.buf.rename, "[r]e[n]ame")
-					lspmap("<leader>ca", vim.lsp.buf.code_action, "[c]ode [a]ction")
-					lspmap("K", vim.lsp.buf.hover, "hover lsp documentation")
-					lspmap("<leader>hd", vim.diagnostic.open_float, "[h]over [d]iagnostic")
-
 					local client = vim.lsp.get_client_by_id(event.data.client_id)
-					if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
-						lspmap("<leader>th", function()
-							vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({}))
-						end, "[t]oggle inlay [h]ints")
-					end
+					attachBindings(event.buf, client)
 				end,
 			})
 

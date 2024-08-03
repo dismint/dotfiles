@@ -1,6 +1,6 @@
-if test -f ~/.bash_profile
-    source ~/.bash_profile; or true
-end
+#if test -f ~/.bash_profile
+#    source ~/.bash_profile; or true
+#end
 
 function fish_greeting
   echo (set_color "#8BA4B0")🙑  (set_color "#8A9A7B")dismint(set_color normal)
