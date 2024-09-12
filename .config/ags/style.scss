@@ -1,0 +1,124 @@
+///////////////
+// VARIABLES //
+///////////////
+
+$textColor: #252525;
+$lightTeal: #EDF9EA;
+$medTeal: #67AC99;
+$darkTeal: #0D5F53;
+
+/////////
+// CSS //
+/////////
+
+* {
+  all: unset;
+}
+
+box {
+  margin: 0px;
+}
+
+.summary {
+  color: $textColor;
+  padding: 10px 10px 5px 10px;
+  font-family: "Inter";
+  font-size: 15px;
+
+  &.solo {
+    padding-bottom: 10px;
+  }
+}
+
+.body {
+  color: $textColor;
+  padding: 5px 10px 10px 10px;
+  font-family: "Inter";
+  font-size: 13px;
+
+  &.solo {
+    padding-top: 10px;
+  }
+}
+
+.image {
+  min-width: 50px;
+  margin: 0px 10px 0px 10px;
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.card {
+  min-width: 500px;
+
+  margin: 5px 0px 5px 0px;
+
+  border-top: 3px solid $darkTeal;
+  border-right: 3px solid $darkTeal;
+  border-bottom: 3px solid $darkTeal;
+  border-radius: 0px 6px 6px 0px;
+
+  background: $lightTeal;
+
+  transition: min-width 0.5s ease;
+}
+
+.accent {
+  min-width: 15px;
+
+  margin: 5px 0px 5px 20px;
+
+  border-top: 3px solid $darkTeal;
+  border-left: 3px solid $darkTeal;
+  border-bottom: 3px solid $darkTeal;
+  border-radius: 6px 0px 0px 6px;
+
+
+  background: $medTeal;
+  transition: background 0.25s linear;
+
+  &.returning {
+    background: $medTeal;
+    transition: min-width 0.25s cubic-bezier(0.15, 0.79, 0, 1),
+  }
+
+  &.pulled {
+    background: $darkTeal;
+  }
+}
+
+.hider {
+  background-color: $darkTeal;
+
+  margin: 5px 0px 5px 20px;
+
+  border-top: 3px solid $darkTeal;
+  border-left: 3px solid $darkTeal;
+  border-bottom: 3px solid $darkTeal;
+  border-radius: 6px;
+
+  &.enter {
+    min-width: 0px;
+    opacity: 0;
+  }
+
+  &.in {
+    opacity: 1;
+    min-width: 515px;
+    transition: min-width 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  &.out {
+    background-color: $medTeal;
+    min-width: 0px;
+    transition:
+      min-width 0.5s cubic-bezier(0.33, 1, 0.68, 1),
+      background-color 0.5s linear;
+  }
+
+  &.exit {
+    opacity: 0;
+  }
+}

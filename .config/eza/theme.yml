@@ -1,0 +1,24 @@
+filekinds:
+  directory:
+    foreground:   35
+    is_bold:      true
+    is_underline: true
+  normal:
+    foreground: 250
+  executable:
+    foreground: 84
+
+file_type:
+  image:
+    foreground: 39
+  video:
+    foreground: 45
+  document:
+    foreground: 84
+  temp:
+    foreground: 236
+  build:
+    foreground:   48
+    is_underline: false
+  source:
+    foreground: 74

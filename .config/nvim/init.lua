@@ -126,13 +126,6 @@ require("lazy").setup({
 
 			local servers = {
 				pyright = {},
-				ocamllsp = {
-					root_dir = function(fname)
-						return require("lspconfig").util.root_pattern("*.opam", "esy.json", "package.json", ".git")(
-							fname
-						) or vim.loop.os_homedir()
-					end,
-				},
 				zls = {
 					root_dir = function(fname)
 						return require("lspconfig").util.root_pattern(".git")(fname) or vim.loop.os_homedir()
@@ -155,7 +148,7 @@ require("lazy").setup({
 			vim.list_extend(ensure_installed, {
 				"stylua",
 				"autopep8",
-				"ocamlformat",
+				"prettier",
 			})
 
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
@@ -174,7 +167,7 @@ require("lazy").setup({
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 		opts = {
-			ensure_installed = { "lua", "python", "ocaml", "zig" },
+			ensure_installed = { "lua", "python", "zig" },
 			auto_install = true,
 			highlight = {
 				enable = true,
@@ -336,6 +329,7 @@ require("lazy").setup({
 				python = { "autopep8" },
 				ocaml = { "ocamlformat" },
 				zig = { "zigfmt" },
+				javascript = { "prettier" },
 			},
 		},
 		config = function(_, opts)
@@ -345,7 +339,7 @@ require("lazy").setup({
 			nmap("<leader>fm", conform.format, "[f]or[m]at")
 
 			vim.api.nvim_create_autocmd("BufWritePre", {
-				pattern = "*.lua,*.ml,*.zig",
+				pattern = "*.lua,*.ml,*.zig,*.js",
 				callback = function(args)
 					conform.format({ bufnr = args.buf })
 				end,
