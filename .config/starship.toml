@@ -1,3 +1,6 @@
+# | 🙑  dismint
+# | YW5uaWUgPDM=
+
 format = """
 [](#308673)$directory[█](fg:#308673 bg:#519F8A)\
 $git_branch$git_commit[█](fg:#519F8A bg:#87C3AA)\
@@ -34,13 +37,13 @@ style = "bold fg:#252525 bg:#A4D3BA"
 format = '([ \[$all_status$ahead_behind\]]($style))'
 
 [character]
-success_symbol = "[❯❯](fg:#67AC99)"  
+success_symbol = "[❯❯](fg:#519F8A)"  
 error_symbol = "[❯❯](fg:#A98FCB)"  
 
 [time]
-format = "[█](fg:#67AC99)[$time](bold fg:#252525 bg:#67AC99)[█](fg:#67AC99)"
+format = "[█](fg:#519F8A)[$time](bold fg:#252525 bg:#519F8A)[█](fg:#519F8A)"
 disabled = false
 
 [fill]
 symbol = "."
-style = "fg:#67AC99"
+style = "fg:#308673"
