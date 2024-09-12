@@ -1,3 +1,6 @@
+# | 🙑  dismint
+# | YW5uaWUgPDM=
+
 function fish_greeting
 end
 
