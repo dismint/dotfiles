@@ -3,25 +3,25 @@
 
 filekinds:
   directory:
-    foreground:   35
+    foreground:   72
     is_bold:      true
     is_underline: true
   normal:
     foreground: 250
   executable:
-    foreground: 84
+    foreground: 151
 
 file_type:
   image:
-    foreground: 39
+    foreground: 72
   video:
     foreground: 45
   document:
     foreground: 84
   temp:
-    foreground: 236
+    foreground: 250
   build:
-    foreground:   48
+    foreground:   65
     is_underline: false
   source:
     foreground: 74
