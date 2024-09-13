@@ -1,9 +1,7 @@
 # | 🙑  dismint
 # | YW5uaWUgPDM=
 
-##########
-# COLORS #
-##########
+#### COLORS ####
 
 colors = {
     "green": [
@@ -27,9 +25,7 @@ colors = {
     ],
 }
 
-########
-# IMPL #
-########
+#### IMPL ####
 
 cube_levels = [0x00, 0x5F, 0x87, 0xAF, 0xD7, 0xFF]
 snaps = [(x + y) / 2 for x, y in zip(cube_levels, [0] + cube_levels)][1:]
