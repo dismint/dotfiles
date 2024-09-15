@@ -458,6 +458,6 @@ require("lazy").setup({
 	{ "brenoprata10/nvim-highlight-colors", opts = {} },
 	{ "lewis6991/gitsigns.nvim", opts = {} },
 	{ "stevearc/dressing.nvim", opts = {} },
-	{ "github/copilot.vim", opts = {} },
-	{ "mbbill/undotree", opts = {} },
+	"github/copilot.vim",
+	"mbbill/undotree",
 })
