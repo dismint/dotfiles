@@ -2,6 +2,7 @@
 -- | YW5uaWUgPDM=
 
 vim.keymap.set("i", "<C-j>", "| 🙑  dismint<CR>| YW5uaWUgPDM=")
+
 -- SECTION: config
 
 vim.g.mapleader = " "
@@ -457,6 +458,6 @@ require("lazy").setup({
 	{ "brenoprata10/nvim-highlight-colors", opts = {} },
 	{ "lewis6991/gitsigns.nvim", opts = {} },
 	{ "stevearc/dressing.nvim", opts = {} },
-	"github/copilot.vim",
-	"mbbill/undotree",
+	{ "github/copilot.vim", opts = {} },
+	{ "mbbill/undotree", opts = {} },
 })
