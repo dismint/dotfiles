@@ -13,6 +13,18 @@ function y
 	rm -f -- "$tmp"
 end
 
+function simg
+    if test (count $argv) -eq 0
+        echo "needs filename"
+        return 1
+    end
+    set filename $argv[1]
+
+    wl-paste -t image/png > $filename.png
+end
+
+# make somethign similar to the above function but it takes in an argument 
+
 function starship_transient_prompt_func
   starship module character
 end
@@ -27,5 +39,7 @@ zoxide init fish | source
 
 alias ls eza
 alias lsa "eza -a"
+
+set -gx BROWSER google-chrome-stable
 
 alias cd z

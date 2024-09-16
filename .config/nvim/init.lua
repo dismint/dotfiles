@@ -453,6 +453,20 @@ require("lazy").setup({
 			{ "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
 		},
 	},
+	{
+		"chomosuke/typst-preview.nvim",
+		ft = "typst",
+		version = "0.3.*",
+		build = function()
+			require("typst-preview").update()
+		end,
+		opts = {
+			open_cmd = "google-chrome-stable %s --new-window",
+		},
+		config = function(_, opts)
+			require("typst-preview").setup(opts)
+		end,
+	},
 	{ "dstein64/nvim-scrollview", opts = {} },
 	{ "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
 	{ "brenoprata10/nvim-highlight-colors", opts = {} },
