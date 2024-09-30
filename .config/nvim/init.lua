@@ -466,6 +466,9 @@ require("lazy").setup({
 		config = function(_, opts)
 			require("typst-preview").setup(opts)
 		end,
+		keys = {
+			{ "<leader>tp", "<cmd>TypstPreviewToggle<cr>" },
+		},
 	},
 	{ "dstein64/nvim-scrollview", opts = {} },
 	{ "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
