@@ -30,6 +30,8 @@ vim.opt.timeoutlen = 500
 vim.opt.undofile = true
 vim.opt.termguicolors = true
 vim.g.have_nerd_font = true
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
 -- SECTION: autocmds
 
@@ -331,6 +333,7 @@ require("lazy").setup({
 				ocaml = { "ocamlformat" },
 				zig = { "zigfmt" },
 				javascript = { "prettier" },
+				typescript = { "prettier" },
 			},
 		},
 		config = function(_, opts)
@@ -340,7 +343,7 @@ require("lazy").setup({
 			nmap("<leader>fm", conform.format, "[f]or[m]at")
 
 			vim.api.nvim_create_autocmd("BufWritePre", {
-				pattern = "*.lua,*.ml,*.zig,*.js",
+				pattern = "*.lua,*.ml,*.zig,*.js,*.ts",
 				callback = function(args)
 					conform.format({ bufnr = args.buf })
 				end,
@@ -451,6 +454,13 @@ require("lazy").setup({
 			{ "<c-k>", "<cmd><C-U>TmuxNavigateUp<cr>" },
 			{ "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
 			{ "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
+		},
+	},
+	{
+		"nvim-tree/nvim-tree.lua",
+		opts = {},
+		keys = {
+			{ "<leader>ee", "<cmd>NvimTreeToggle<cr>" },
 		},
 	},
 	{
