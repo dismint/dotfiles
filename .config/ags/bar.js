@@ -188,9 +188,6 @@ function clientTitle() {
   return Widget.Box({
     children: [
       Widget.Label({
-        css: hyprland.active.client.bind("title").as((name) => {
-          return `font-size: ${30}px;`;
-        }),
         maxWidthChars: 1,
         ellipsize: 3,
         wrap: true,
