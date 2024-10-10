@@ -200,9 +200,7 @@ function clientTitle() {
         hexpand: true,
         hpack: "start",
         useMarkup: true,
-        label: hyprland.active.client
-          .bind("title")
-          .as((name) => `<b>${name}</b>`),
+        label: hyprland.active.client.bind("title").as((name) => `${name}`),
       }),
     ],
   });
