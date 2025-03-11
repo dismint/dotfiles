@@ -8,8 +8,9 @@ $git_metrics[█](fg:#87C3AA bg:#A4D3BA)\
 $git_status[█](fg:#A4D3BA)\
 $fill\
 $time
-$character
+$character\
 """
+right_format="$python"
 
 [directory]
 style = "bold fg:#252525 bg:#308673"
@@ -47,3 +48,7 @@ disabled = false
 [fill]
 symbol = "."
 style = "fg:#308673"
+
+[python]
+symbol = ""
+style = "bold fg:#EEFAEB"
