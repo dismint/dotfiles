@@ -30,7 +30,9 @@ My configuration is contained within one file and aims to be as self contained a
 
 ## Utilities
 - `grim`, `slurp`, `wl-clipboard` for clipboard and screenshot functionality
-- `bibata-cursor-theme`
 - `rofi` for application launcher
 - `spotify-launcher`
 - `cava`
+
+## Cursor
+Install `hyprcursor` and `bibata-cursor-theme`. In addition to the config in `hyprland.conf`, the file `default/index.theme` in `~/.icons`, `~/.local/share/icons`, and `/usr/share/icons` should be changed to `Bibata-Cursor-Theme`
