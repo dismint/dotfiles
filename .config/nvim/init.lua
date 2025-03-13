@@ -334,6 +334,7 @@ require("lazy").setup({
 				zig = { "zigfmt" },
 				javascript = { "prettier" },
 				typescript = { "prettier" },
+				json = { "prettier" },
 			},
 		},
 		config = function(_, opts)
@@ -343,7 +344,7 @@ require("lazy").setup({
 			nmap("<leader>fm", conform.format, "[f]or[m]at")
 
 			vim.api.nvim_create_autocmd("BufWritePre", {
-				pattern = "*.lua,*.ml,*.zig,*.js,*.ts",
+				pattern = "*.lua,*.ml,*.zig,*.js,*.ts,*.json",
 				callback = function(args)
 					conform.format({ bufnr = args.buf })
 				end,
