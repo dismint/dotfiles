@@ -3,7 +3,7 @@
 
 filekinds:
   directory:
-    foreground:   72
+    foreground:   "#8BA4B0"
     is_bold:      true
     is_underline: true
   normal:

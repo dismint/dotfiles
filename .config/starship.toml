@@ -2,10 +2,10 @@
 # | YW5uaWUgPDM=
 
 format = """
-[](#308673)$directory[█](fg:#308673 bg:#519F8A)\
-$git_branch$git_commit[█](fg:#519F8A bg:#87C3AA)\
-$git_metrics[█](fg:#87C3AA bg:#A4D3BA)\
-$git_status[█](fg:#A4D3BA)\
+[](#658594)$directory[█](fg:#658594 bg:#8EA4A2)\
+$git_branch$git_commit[█](fg:#8EA4A2 bg:#76946A)\
+$git_metrics[█](fg:#76946A bg:#b7d0ae)\
+$git_status[█](fg:#b7d0ae)\
 $fill\
 $time
 $character\
@@ -13,42 +13,42 @@ $character\
 right_format="$python"
 
 [directory]
-style = "bold fg:#252525 bg:#308673"
+style = "bold fg:#0D0C0C bg:#658594"
 format = "[$path]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
 
 [git_branch]
 symbol = "  "
-style = "bold fg:#252525 bg:#519F8A"
+style = "bold fg:#0D0C0C bg:#8EA4A2"
 format = "[$symbol$branch(:$remote_branch)]($style)"
 
 [git_commit]
-style = "fg:#252525 bg:#519F8A"
+style = "fg:#0D0C0C bg:#8EA4A2"
 format = "[ $hash$tag]($style)"
 
 [git_metrics]
-added_style = "bold fg:#252525 bg:#87C3AA"
-deleted_style = "bold fg:#287E6B bg:#87C3AA"
+added_style = "bold fg:#0D0C0C bg:#76946A"
+deleted_style = "bold fg:#0D0C0C bg:#76946A"
 format = "([ +$added]($added_style))([ -$deleted]($deleted_style))"
 disabled = false
 
 [git_status]
-style = "bold fg:#252525 bg:#A4D3BA"
+style = "bold fg:#0D0C0C bg:#b7d0ae"
 format = '([ \[$all_status$ahead_behind\]]($style))'
 
 [character]
-success_symbol = "[❯❯](fg:#519F8A)"  
-error_symbol = "[❯❯](fg:#A98FCB)"  
+success_symbol = "[❯❯](fg:#658594)"  
+error_symbol = "[❯❯](fg:#C4746E)"  
 
 [time]
-format = "[█](fg:#519F8A)[$time](bold fg:#252525 bg:#519F8A)[█](fg:#519F8A)"
+format = "[█](fg:#C4B28A)[$time](bold fg:#0D0C0C bg:#C4B28A)[█](fg:#C4B28A)"
 disabled = false
 
 [fill]
 symbol = "."
-style = "fg:#308673"
+style = "fg:#C5C9C5"
 
 [python]
 symbol = ""
-style = "bold fg:#EEFAEB"
+style = "bold fg:#C5C9C5"
