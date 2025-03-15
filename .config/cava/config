@@ -13,8 +13,8 @@ bar_spacing = 1
 
 gradient = 1
 gradient_count = 2
-gradient_color_1 = '#DCD7BA'
-gradient_color_2 = '#658594'
+gradient_color_1 = '#658594'
+gradient_color_2 = '#DCD7BA'
 
 [smoothing]
 
