@@ -43,3 +43,5 @@ alias lsa "eza -a"
 set -gx BROWSER google-chrome-stable
 
 alias cd z
+
+set -Ua fish_user_paths ~/factorio/bin/x64
