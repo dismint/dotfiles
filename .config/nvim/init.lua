@@ -335,6 +335,7 @@ require("lazy").setup({
 				javascript = { "prettier" },
 				typescript = { "prettier" },
 				json = { "prettier" },
+				odin = { "odinfmt" },
 			},
 		},
 		config = function(_, opts)
@@ -481,11 +482,26 @@ require("lazy").setup({
 			{ "<leader>tp", "<cmd>TypstPreviewToggle<cr>" },
 		},
 	},
+	{
+		"zbirenbaum/copilot.lua",
+		cmd = "Copilot",
+		event = "InsertEnter",
+		config = function()
+			require("copilot").setup({
+				suggestion = {
+					keymap = {
+						next = "<M-f>",
+						prev = "<M-g>",
+						accept = "<M-CR>",
+					},
+				},
+			})
+		end,
+	},
 	{ "dstein64/nvim-scrollview", opts = {} },
 	{ "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
 	{ "brenoprata10/nvim-highlight-colors", opts = {} },
 	{ "lewis6991/gitsigns.nvim", opts = {} },
 	{ "stevearc/dressing.nvim", opts = {} },
-	"github/copilot.vim",
 	"mbbill/undotree",
 })
