@@ -202,6 +202,12 @@ require("lazy").setup({
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
 			luasnip.config.setup()
+			vim.keymap.set({ "i", "s" }, "<C-l>", function()
+				luasnip.jump(1)
+			end, { silent = true })
+			vim.keymap.set({ "i", "s" }, "<C-h>", function()
+				luasnip.jump(-1)
+			end, { silent = true })
 			cmp.setup({
 				snippet = {
 					expand = function(args)
