@@ -201,6 +201,7 @@ require("lazy").setup({
 		config = function()
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
+			require("luasnip.loaders.from_snipmate").lazy_load()
 			luasnip.config.setup()
 			vim.keymap.set({ "i", "s" }, "<C-l>", function()
 				luasnip.jump(1)
@@ -331,6 +332,35 @@ require("lazy").setup({
 	{
 		"stevearc/conform.nvim",
 		event = "VimEnter",
+		lazy = false,
+		keys = {
+			{
+				"<leader>tf",
+				function()
+					if vim.b.disable_autoformat then
+						vim.cmd("FormatEnable")
+						vim.notify("Enabled autoformat for current buffer")
+					else
+						vim.cmd("FormatDisable!")
+						vim.notify("Disabled autoformat for current buffer")
+					end
+				end,
+				desc = "Toggle autoformat for current buffer",
+			},
+			{
+				"<leader>tF",
+				function()
+					if vim.g.disable_autoformat then
+						vim.cmd("FormatEnable")
+						vim.notify("Enabled autoformat globally")
+					else
+						vim.cmd("FormatDisable")
+						vim.notify("Disabled autoformat globally")
+					end
+				end,
+				desc = "Toggle autoformat globally",
+			},
+		},
 		opts = {
 			notify_on_error = false,
 			formatters_by_ft = {
@@ -343,6 +373,8 @@ require("lazy").setup({
 				json = { "prettier" },
 				odin = { "odinfmt" },
 				html = { "prettier" },
+				css = { "prettier" },
+				scss = { "prettier" },
 				htmldjango = { "djlint" },
 			},
 		},
@@ -353,10 +385,26 @@ require("lazy").setup({
 			nmap("<leader>fm", conform.format, "[f]or[m]at")
 
 			vim.api.nvim_create_autocmd("BufWritePre", {
-				pattern = "*.lua,*.ml,*.zig,*.js,*.ts,*.json,*.html",
+				pattern = "*.lua,*.ml,*.zig,*.js,*.ts,*.json,*.html,*.css",
 				callback = function(args)
 					conform.format({ bufnr = args.buf })
 				end,
+			})
+			vim.api.nvim_create_user_command("FormatDisable", function(args)
+				if args.bang then
+					vim.b.disable_autoformat = true
+				else
+					vim.g.disable_autoformat = true
+				end
+			end, {
+				desc = "Disable autoformat-on-save",
+				bang = true,
+			})
+			vim.api.nvim_create_user_command("FormatEnable", function()
+				vim.b.disable_autoformat = false
+				vim.g.disable_autoformat = false
+			end, {
+				desc = "Re-enable autoformat-on-save",
 			})
 		end,
 	},

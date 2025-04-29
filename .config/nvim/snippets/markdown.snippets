@@ -1,0 +1,12 @@
+snippet img
+	{% img "/imgs/${1:filename}.png", "${2:alt}", ${3:em-width} %}
+
+snippet frontmatter
+  ---
+  layout: 'layouts/blog.html'
+  tags: blog
+  date: ${1:YYYY-MM-DD}
+  length: $2
+  title: $3
+  ---
+
