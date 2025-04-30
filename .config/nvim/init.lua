@@ -376,6 +376,7 @@ require("lazy").setup({
 				css = { "prettier" },
 				scss = { "prettier" },
 				htmldjango = { "djlint" },
+				tex = { "tex-fmt" },
 			},
 		},
 		config = function(_, opts)
@@ -385,7 +386,7 @@ require("lazy").setup({
 			nmap("<leader>fm", conform.format, "[f]or[m]at")
 
 			vim.api.nvim_create_autocmd("BufWritePre", {
-				pattern = "*.lua,*.ml,*.zig,*.js,*.ts,*.json,*.html,*.css",
+				pattern = "*.lua,*.ml,*.zig,*.js,*.ts,*.json,*.html,*.css,*.tex",
 				callback = function(args)
 					conform.format({ bufnr = args.buf })
 				end,
