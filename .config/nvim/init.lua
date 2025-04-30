@@ -555,6 +555,31 @@ require("lazy").setup({
 			})
 		end,
 	},
+	{
+		"mikavilpas/yazi.nvim",
+		event = "VeryLazy",
+		dependencies = {
+			"folke/snacks.nvim",
+		},
+		keys = {
+			{
+				"<leader>y",
+				mode = { "n", "v" },
+				"<cmd>Yazi<cr>",
+				desc = "Open yazi at the current file",
+			},
+			{
+				"<leader>yd",
+				"<cmd>Yazi cwd<cr>",
+				desc = "Open the file manager in nvim's working directory",
+			},
+			{
+				"<leader>yr",
+				"<cmd>Yazi toggle<cr>",
+				desc = "Resume the last yazi session",
+			},
+		},
+	},
 	{ "dstein64/nvim-scrollview", opts = {} },
 	{ "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
 	{ "brenoprata10/nvim-highlight-colors", opts = {} },
