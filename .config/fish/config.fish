@@ -41,6 +41,7 @@ alias ls eza
 alias lsa "eza -a"
 
 set -gx BROWSER google-chrome-stable
+set -gx EDITOR nvim
 
 alias cd z
 
