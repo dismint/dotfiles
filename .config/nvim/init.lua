@@ -370,6 +370,7 @@ require("lazy").setup({
 				zig = { "zigfmt" },
 				javascript = { "prettier" },
 				typescript = { "prettier" },
+				typescriptreact = { "prettier" },
 				json = { "prettier" },
 				odin = { "odinfmt" },
 				html = { "prettier" },
@@ -386,7 +387,7 @@ require("lazy").setup({
 			nmap("<leader>fm", conform.format, "[f]or[m]at")
 
 			vim.api.nvim_create_autocmd("BufWritePre", {
-				pattern = "*.lua,*.ml,*.zig,*.js,*.ts,*.json,*.html,*.css,*.tex",
+				pattern = "*.lua,*.ml,*.zig,*.js,*.ts,*.json,*.html,*.css,*.tex,*.tsx",
 				callback = function(args)
 					conform.format({ bufnr = args.buf })
 				end,
@@ -525,7 +526,7 @@ require("lazy").setup({
 	{
 		"chomosuke/typst-preview.nvim",
 		ft = "typst",
-		version = "0.3.*",
+		version = "1.*",
 		build = function()
 			require("typst-preview").update()
 		end,
@@ -563,18 +564,18 @@ require("lazy").setup({
 		},
 		keys = {
 			{
-				"<leader>y",
+				"<leader>fy",
 				mode = { "n", "v" },
 				"<cmd>Yazi<cr>",
 				desc = "Open yazi at the current file",
 			},
 			{
-				"<leader>yd",
+				"<leader>dy",
 				"<cmd>Yazi cwd<cr>",
 				desc = "Open the file manager in nvim's working directory",
 			},
 			{
-				"<leader>yr",
+				"<leader>y",
 				"<cmd>Yazi toggle<cr>",
 				desc = "Resume the last yazi session",
 			},
