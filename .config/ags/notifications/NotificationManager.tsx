@@ -17,7 +17,7 @@ function updateInputRegion(values, wind) {
   }
   const rect = new Gdk.Rectangle({
     x: 45,
-    y: 40,
+    y: 1400 - totalHeight,
     width: 510,
     height: totalHeight,
   });
@@ -64,7 +64,7 @@ export default function NotificationManager(gdkmonitor: Gdk.Monitor) {
       className: "notif-inner-box transparent classic-color",
       children: [],
       hexpand: false,
-      halign: Gtk.Align.START,
+      halign: 1,
     });
     if (n.image) {
       const image = new Widget.Box({
@@ -220,7 +220,7 @@ export default function NotificationManager(gdkmonitor: Gdk.Monitor) {
       deleteIfDue();
     });
 
-    values.pack_start(eventBox, false, false, 0);
+    values.pack_end(eventBox, false, false, 0);
     values.show_all();
     contentBox.toggleClassName("transparent", false);
     contentBox.toggleClassName("visible", true);
