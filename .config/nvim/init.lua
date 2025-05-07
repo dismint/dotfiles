@@ -46,6 +46,13 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 	end,
 })
 
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+	pattern = "*.tex",
+	callback = function()
+		vim.bo.filetype = "tex"
+	end,
+})
+
 vim.api.nvim_create_autocmd("TextYankPost", {
 	desc = "highlight when yanking (copying) text",
 	group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
@@ -377,7 +384,14 @@ require("lazy").setup({
 				css = { "prettier" },
 				scss = { "prettier" },
 				htmldjango = { "djlint" },
-				tex = { "tex-fmt" },
+				tex = { "tex_fmt" },
+			},
+			formatters = {
+				tex_fmt = {
+					command = "tex-fmt",
+					args = { "--nowrap", "--stdin" },
+					stdin = true,
+				},
 			},
 		},
 		config = function(_, opts)
