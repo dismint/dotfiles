@@ -29,6 +29,7 @@ $text-color: #c5c9c5;
   border: 5px solid #625e5a;
 
   &.setup-shrink {
+    transition: margin 0.5s cubic-bezier(0.37, 0, 0.63, 1);
     border: none;
     min-width: 510px;
     min-height: 90px;

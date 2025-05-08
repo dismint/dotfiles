@@ -154,7 +154,7 @@ export default function NotificationManager(gdkmonitor: Gdk.Monitor) {
         hider.destroy();
         contentBox.toggleClassName("setup-shrink", true);
         // remove border and shrink from that state so border does not hang at end
-        timeout(0, () => {
+        timeout(10, () => {
           contentBox.toggleClassName("setup-shrink", false);
           contentBox.toggleClassName("shrink", true);
         });
