@@ -137,6 +137,11 @@ export default function NotificationManager(gdkmonitor: Gdk.Monitor) {
 
       contentBox.toggleClassName("hover-color", false);
       contentBox.toggleClassName("classic-color", true);
+      timeout(500, () => {
+        contentBox.toggleClassName("hover-color", false);
+        contentBox.toggleClassName("classic-color", false);
+        contentBox.toggleClassName("shrink-color", true);
+      });
 
       if (invoke) {
         for (const action of n.get_actions()) {
@@ -146,8 +151,13 @@ export default function NotificationManager(gdkmonitor: Gdk.Monitor) {
 
       hider.toggleClassName("hide", true);
       timeout(500, () => {
-        hider.toggleClassName("shrink", true);
-        contentBox.toggleClassName("shrink", true);
+        hider.destroy();
+        contentBox.toggleClassName("setup-shrink", true);
+        // remove border and shrink from that state so border does not hang at end
+        timeout(0, () => {
+          contentBox.toggleClassName("setup-shrink", false);
+          contentBox.toggleClassName("shrink", true);
+        });
         for (const element of contentBox.get_children()) {
           element.destroy();
         }
