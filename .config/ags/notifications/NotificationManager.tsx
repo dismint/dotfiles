@@ -6,7 +6,7 @@ import Notifd from "gi://AstalNotifd";
 import { timeout } from "astal";
 import Cairo from "gi://cairo?version=1.0";
 
-const TIMEOUT = 3000;
+const TIMEOUT = 5000;
 const GRACE = 1000;
 
 // @ts-ignore
