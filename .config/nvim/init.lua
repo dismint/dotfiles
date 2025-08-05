@@ -135,7 +135,7 @@ require("lazy").setup({
 			vim.g.zig_fmt_autosave = 0
 
 			local servers = {
-				pyright = {},
+				basedpyright = {},
 				zls = {
 					root_dir = function(fname)
 						return require("lspconfig").util.root_pattern(".git")(fname) or vim.loop.os_homedir()
