@@ -50,7 +50,7 @@ alias cd z
 
 # fzf
 fzf --fish | source
-set -Ux FZF_DEFAULT_OPTS "$FZF_DEFAULT_OPTS
+set -gx FZF_DEFAULT_OPTS "$FZF_DEFAULT_OPTS
   --color=fg:-1,fg+:#8EA4A2,bg:-1,bg+:#393836
   --color=hl:#658594,hl+:#658594,info:#afaf87,marker:#b7d0ae
   --color=prompt:#658594,spinner:#8EA4A2,pointer:#C4B28A,header:#87afaf
