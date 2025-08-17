@@ -23,8 +23,13 @@ function simg
     wl-paste -t image/png > $filename.png
 end
 
-# make somethign similar to the above function but it takes in an argument 
+set -gx BROWSER google-chrome-stable
+set -gx EDITOR nvim
 
+set -Ua fish_user_paths ~/factorio/bin/x64
+
+
+# starship
 function starship_transient_prompt_func
   starship module character
 end
@@ -35,14 +40,21 @@ end
 starship init fish | source
 enable_transience
 
-zoxide init fish | source
-
+# eza
 alias ls eza
 alias lsa "eza -a"
 
-set -gx BROWSER google-chrome-stable
-set -gx EDITOR nvim
-
+# zoxide
+zoxide init fish | source
 alias cd z
 
-set -Ua fish_user_paths ~/factorio/bin/x64
+# fzf
+fzf --fish | source
+set -Ux FZF_DEFAULT_OPTS "$FZF_DEFAULT_OPTS
+  --color=fg:-1,fg+:#8EA4A2,bg:-1,bg+:#393836
+  --color=hl:#658594,hl+:#658594,info:#afaf87,marker:#b7d0ae
+  --color=prompt:#658594,spinner:#8EA4A2,pointer:#C4B28A,header:#87afaf
+  --color=border:#393836,label:#aeaeae,query:#d9d9d9
+  --border=rounded --border-label= --preview-window=border-rounded --prompt='> '
+  --marker='>' --pointer='◆' --separator='─' --scrollbar='│'"
+
