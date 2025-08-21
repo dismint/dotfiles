@@ -1,9 +1,0 @@
-news.version=3.1.0
-
-data.location=~/dotfiles/.config/task/taskdata
-hooks.location=~/dotfiles/.config/task/hooks
-
-dateformat=Y-m-d-h:n
-
-include bubblegum-256.theme
-
