@@ -377,7 +377,7 @@ require("lazy").setup({
 			notify_on_error = false,
 			formatters_by_ft = {
 				lua = { "stylua" },
-				python = { "autopep8" },
+				python = { "black" },
 				zig = { "zigfmt" },
 				javascript = { "prettier" },
 				typescript = { "prettier" },
@@ -550,6 +550,29 @@ require("lazy").setup({
 				"<cmd>Yazi toggle<cr>",
 				desc = "Resume the last yazi session",
 			},
+		},
+	},
+	{
+		"folke/snacks.nvim",
+		priority = 1000,
+		lazy = false,
+		---@type snacks.Config
+		opts = {
+			-- your configuration comes here
+			-- or leave it empty to use the default settings
+			-- refer to the configuration section below
+			bigfile = { enabled = true },
+			dashboard = { enabled = true },
+			explorer = { enabled = true },
+			indent = { enabled = true },
+			input = { enabled = true },
+			picker = { enabled = true },
+			notifier = { enabled = true },
+			quickfile = { enabled = true },
+			scope = { enabled = true },
+			scroll = { enabled = true },
+			statuscolumn = { enabled = true },
+			words = { enabled = true },
 		},
 	},
 	{ "dstein64/nvim-scrollview", opts = {} },
