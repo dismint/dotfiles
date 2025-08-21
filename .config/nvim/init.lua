@@ -79,7 +79,7 @@ local attachBindings = function(bufnr, client)
 
 	local tb = require("telescope.builtin")
 	lspmap("gd", tb.lsp_definitions, "[g]oto [d]efinition") -- <C-t> jumps back
-	lspmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+	lspmap("gD", vim.lsp.buf.declaration, "[g]oto [D]eclaration")
 	lspmap("gr", tb.lsp_references, "[g]oto [r]eferences")
 	lspmap("gI", tb.lsp_implementations, "[g]oto [I]mplementation")
 	lspmap("<leader>td", tb.lsp_type_definitions, "[t]ype [d]efinition")
@@ -157,7 +157,7 @@ require("lazy").setup({
 			local ensure_installed = vim.tbl_keys(servers)
 			vim.list_extend(ensure_installed, {
 				"stylua",
-				"autopep8",
+				"black",
 				"prettier",
 			})
 
@@ -182,7 +182,7 @@ require("lazy").setup({
 			highlight = {
 				enable = true,
 			},
-			indent = { enable = false },
+			indent = { enable = true },
 		},
 		config = function(_, opts)
 			require("nvim-treesitter.install").prefer_git = true
@@ -210,12 +210,15 @@ require("lazy").setup({
 			local luasnip = require("luasnip")
 			require("luasnip.loaders.from_snipmate").lazy_load()
 			luasnip.config.setup()
+
 			vim.keymap.set({ "i", "s" }, "<C-l>", function()
 				luasnip.jump(1)
 			end, { silent = true })
+
 			vim.keymap.set({ "i", "s" }, "<C-h>", function()
 				luasnip.jump(-1)
 			end, { silent = true })
+
 			cmp.setup({
 				snippet = {
 					expand = function(args)
@@ -240,6 +243,7 @@ require("lazy").setup({
 					{ name = "buffer" },
 				},
 			})
+
 			cmp.setup.cmdline(":", {
 				mapping = cmp.mapping.preset.cmdline(),
 				sources = cmp.config.sources({
@@ -285,6 +289,7 @@ require("lazy").setup({
 					},
 				},
 				defaults = {
+					initial_mode = "normal",
 					results_title = "results",
 					mappings = {
 						n = { ["d"] = actions.delete_buffer },
@@ -346,23 +351,23 @@ require("lazy").setup({
 				function()
 					if vim.b.disable_autoformat then
 						vim.cmd("FormatEnable")
-						vim.notify("Enabled autoformat for current buffer")
+						vim.notify("enabled autoformat for current buffer")
 					else
 						vim.cmd("FormatDisable!")
-						vim.notify("Disabled autoformat for current buffer")
+						vim.notify("disabled autoformat for current buffer")
 					end
 				end,
-				desc = "Toggle autoformat for current buffer",
+				desc = "toggle autoformat for current buffer",
 			},
 			{
 				"<leader>tF",
 				function()
 					if vim.g.disable_autoformat then
 						vim.cmd("FormatEnable")
-						vim.notify("Enabled autoformat globally")
+						vim.notify("enabled autoformat globally")
 					else
 						vim.cmd("FormatDisable")
-						vim.notify("Disabled autoformat globally")
+						vim.notify("disabled autoformat globally")
 					end
 				end,
 				desc = "Toggle autoformat globally",
@@ -373,25 +378,14 @@ require("lazy").setup({
 			formatters_by_ft = {
 				lua = { "stylua" },
 				python = { "autopep8" },
-				ocaml = { "ocamlformat" },
 				zig = { "zigfmt" },
 				javascript = { "prettier" },
 				typescript = { "prettier" },
 				typescriptreact = { "prettier" },
 				json = { "prettier" },
-				odin = { "odinfmt" },
 				html = { "prettier" },
 				css = { "prettier" },
 				scss = { "prettier" },
-				htmldjango = { "djlint" },
-				tex = { "tex_fmt" },
-			},
-			formatters = {
-				tex_fmt = {
-					command = "tex-fmt",
-					args = { "--nowrap", "--stdin" },
-					stdin = true,
-				},
 			},
 		},
 		config = function(_, opts)
@@ -401,7 +395,7 @@ require("lazy").setup({
 			nmap("<leader>fm", conform.format, "[f]or[m]at")
 
 			vim.api.nvim_create_autocmd("BufWritePre", {
-				pattern = "*.lua,*.ml,*.zig,*.js,*.ts,*.json,*.html,*.css,*.tex,*.tsx",
+				pattern = "*.py,*.lua,*.zig,*.js,*.ts,*.json,*.html,*.css",
 				callback = function(args)
 					conform.format({ bufnr = args.buf })
 				end,
@@ -413,14 +407,14 @@ require("lazy").setup({
 					vim.g.disable_autoformat = true
 				end
 			end, {
-				desc = "Disable autoformat-on-save",
+				desc = "disable autoformat-on-save",
 				bang = true,
 			})
 			vim.api.nvim_create_user_command("FormatEnable", function()
 				vim.b.disable_autoformat = false
 				vim.g.disable_autoformat = false
 			end, {
-				desc = "Re-enable autoformat-on-save",
+				desc = "re-enable autoformat-on-save",
 			})
 		end,
 	},
@@ -451,19 +445,6 @@ require("lazy").setup({
 		lazy = false,
 		config = function()
 			vim.cmd("colorscheme kanagawa-dragon")
-		end,
-	},
-	{
-		"stevearc/oil.nvim",
-		dependencies = {
-			{ "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
-		},
-		opts = {},
-		config = function(_, opts)
-			local oil = require("oil")
-			oil.setup(opts)
-
-			nmap("<leader>of", oil.toggle_float, "[o]il [f]loat")
 		end,
 	},
 	{
@@ -531,30 +512,6 @@ require("lazy").setup({
 		},
 	},
 	{
-		"nvim-tree/nvim-tree.lua",
-		opts = {},
-		keys = {
-			{ "<leader>ee", "<cmd>NvimTreeToggle<cr>" },
-		},
-	},
-	{
-		"chomosuke/typst-preview.nvim",
-		ft = "typst",
-		version = "1.*",
-		build = function()
-			require("typst-preview").update()
-		end,
-		opts = {
-			open_cmd = "google-chrome-stable %s --new-window",
-		},
-		config = function(_, opts)
-			require("typst-preview").setup(opts)
-		end,
-		keys = {
-			{ "<leader>tp", "<cmd>TypstPreviewToggle<cr>" },
-		},
-	},
-	{
 		"zbirenbaum/copilot.lua",
 		cmd = "Copilot",
 		event = "InsertEnter",
@@ -599,6 +556,5 @@ require("lazy").setup({
 	{ "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
 	{ "brenoprata10/nvim-highlight-colors", opts = {} },
 	{ "lewis6991/gitsigns.nvim", opts = {} },
-	{ "stevearc/dressing.nvim", opts = {} },
 	"mbbill/undotree",
 })
