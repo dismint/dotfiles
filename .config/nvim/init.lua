@@ -504,7 +504,7 @@ require("lazy").setup({
 					keymap = {
 						next = "<M-f>",
 						prev = "<M-g>",
-						accept = "<M-CR>",
+						accept = "<M-o>",
 					},
 				},
 			})
