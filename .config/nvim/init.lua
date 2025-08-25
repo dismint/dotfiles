@@ -567,6 +567,7 @@ require("lazy").setup({
 		lazy = false,
 		---@type snacks.Config
 		opts = {
+			git = { enabled = false },
 			bigfile = { enabled = true },
 			dashboard = { enabled = true },
 			explorer = { enabled = true },
@@ -583,5 +584,6 @@ require("lazy").setup({
 	{ "dstein64/nvim-scrollview", opts = {} },
 	{ "brenoprata10/nvim-highlight-colors", opts = {} },
 	{ "lewis6991/gitsigns.nvim", opts = {} },
+	"tpope/vim-fugitive",
 	"mbbill/undotree",
 })
