@@ -63,13 +63,24 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- SECTION: utils
 
-local nomap = function(keys, func, desc, opts)
+local vomap = function(mode, keys, func, desc, opts)
 	opts["desc"] = desc
-	vim.keymap.set("n", keys, func, opts)
+	vim.keymap.set(mode, keys, func, opts)
 end
-
+local vmap = function(mode, keys, func, desc)
+	vomap(mode, keys, func, desc, {})
+end
+local nomap = function(keys, func, desc, opts)
+	vomap("n", keys, func, desc, opts)
+end
 local nmap = function(keys, func, desc)
 	nomap(keys, func, desc, {})
+end
+local iomap = function(keys, func, desc, opts)
+	vomap("i", keys, func, desc, opts)
+end
+local imap = function(keys, func, desc)
+	iomap(keys, func, desc, {})
 end
 
 local attachBindings = function(bufnr, client)
@@ -129,8 +140,6 @@ require("lazy").setup({
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 			capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
-			-- set vars
-
 			vim.g.zig_fmt_parse_errors = 0
 			vim.g.zig_fmt_autosave = 0
 
@@ -138,6 +147,7 @@ require("lazy").setup({
 				basedpyright = {},
 				zls = {
 					root_dir = function(fname)
+						---@diagnostic disable-next-line: undefined-field
 						return require("lspconfig").util.root_pattern(".git")(fname) or vim.loop.os_homedir()
 					end,
 				},
@@ -211,13 +221,12 @@ require("lazy").setup({
 			require("luasnip.loaders.from_snipmate").lazy_load()
 			luasnip.config.setup()
 
-			vim.keymap.set({ "i", "s" }, "<C-l>", function()
+			vomap({ "i", "s" }, "<C-l>", function()
 				luasnip.jump(1)
-			end, { silent = true })
-
-			vim.keymap.set({ "i", "s" }, "<C-h>", function()
+			end, "jump 1 cmp", { silent = true })
+			vomap({ "i", "s" }, "<C-h>", function()
 				luasnip.jump(-1)
-			end, { silent = true })
+			end, "jump -1 cmp", { silent = true })
 
 			cmp.setup({
 				snippet = {
@@ -516,24 +525,12 @@ require("lazy").setup({
 		dependencies = {
 			"folke/snacks.nvim",
 		},
-		keys = {
-			{
-				"<leader>fy",
-				mode = { "n", "v" },
-				"<cmd>Yazi<cr>",
-				desc = "Open yazi at the current file",
-			},
-			{
-				"<leader>dy",
-				"<cmd>Yazi cwd<cr>",
-				desc = "Open the file manager in nvim's working directory",
-			},
-			{
-				"<leader>y",
-				"<cmd>Yazi toggle<cr>",
-				desc = "Resume the last yazi session",
-			},
-		},
+		config = function()
+			yazi = require("yazi")
+			vmap({ "n", "v" }, "<leader>fy", "<cmd>Yazi<cr>", "open [y]azi at the current [f]ile")
+			vmap({ "n", "v" }, "<leader>dy", "<cmd>Yazi cwd<cr>", "open [y]azi at the current [d]irectory")
+			vmap({ "n", "v" }, "<leader>y", yazi.toggle, "open last [y]azi session")
+		end,
 	},
 	{
 		"folke/noice.nvim",
