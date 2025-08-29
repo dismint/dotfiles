@@ -103,9 +103,9 @@ local attachBindings = function(bufnr, client)
 	lspmap("<leader>hd", vim.diagnostic.open_float, "[h]over [d]iagnostic")
 
 	if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
-		lspmap("<leader>th", function()
+		lspmap("<leader>ti", function()
 			vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({}))
-		end, "[t]oggle inlay [h]ints")
+		end, "[t]oggle [i]nlay hints")
 	end
 end
 
@@ -304,6 +304,7 @@ require("lazy").setup({
 						n = { ["d"] = actions.delete_buffer },
 						i = {},
 					},
+					path_display = { "truncate", "filename_first" },
 				},
 			})
 			pcall(require("telescope").load_extension, "fzf")
@@ -488,7 +489,16 @@ require("lazy").setup({
 						timeout = 500,
 					},
 				},
-				lualine_c = { "filename" },
+				lualine_c = {
+					"filename",
+					{
+						function()
+							local cur_buf = vim.api.nvim_get_current_buf()
+							return require("hbac.state").is_pinned(cur_buf) and "📍" or ""
+						end,
+						color = { fg = "#ef5f6b", gui = "bold" },
+					},
+				},
 				lualine_x = { "diff" },
 				lualine_y = { "branch" },
 				lualine_z = { "progress" },
@@ -578,6 +588,67 @@ require("lazy").setup({
 			words = { enabled = true },
 		},
 	},
+	{
+		"axkirillov/hbac.nvim",
+		lazy = false,
+		config = function()
+			local actions = require("hbac.telescope.actions")
+			require("telescope").load_extension("hbac")
+
+			require("hbac").setup({
+				autoclose = true,
+				threshold = 10,
+				close_command = function(bufnr)
+					vim.api.nvim_buf_delete(bufnr, {})
+				end,
+				close_buffers_with_windows = false,
+				telescope = {
+					sort_mru = true,
+					sort_lastused = true,
+					selection_strategy = "row",
+					use_default_mappings = true,
+					mappings = {
+						i = {
+							["<M-c>"] = actions.close_unpinned,
+							["<M-x>"] = actions.delete_buffer,
+							["<M-a>"] = actions.pin_all,
+							["<M-u>"] = actions.unpin_all,
+							["<M-y>"] = actions.toggle_pin,
+						},
+						n = {},
+					},
+					pin_icons = {
+						pinned = { "󰐃 ", hl = "DiagnosticOk" },
+						unpinned = { "󰤱 ", hl = "DiagnosticOk" },
+					},
+				},
+			})
+		end,
+		keys = {
+			{
+				"<leader>th",
+				function()
+					require("telescope").extensions.hbac.buffers()
+				end,
+				desc = "[t]elescope [h]bac",
+			},
+			{
+				"<leader>ht",
+				function()
+					require("hbac").toggle_pin()
+				end,
+				desc = "[h]bac [t]oggle",
+			},
+			{
+				"<leader>hc",
+				function()
+					require("hbac").close_unpinned()
+				end,
+				desc = "[h]bac [c]lose",
+			},
+		},
+	},
+	{ "kevinhwang91/nvim-bqf", ft = "qf" },
 	{ "dstein64/nvim-scrollview", opts = {} },
 	{ "brenoprata10/nvim-highlight-colors", opts = {} },
 	{ "lewis6991/gitsigns.nvim", opts = {} },
