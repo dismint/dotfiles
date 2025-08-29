@@ -61,6 +61,12 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
+vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+	callback = function()
+		require("lint").try_lint()
+	end,
+})
+
 -- SECTION: utils
 
 local vomap = function(mode, keys, func, desc, opts)
@@ -169,6 +175,7 @@ require("lazy").setup({
 				"stylua",
 				"black",
 				"prettier",
+				"mypy",
 			})
 
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
@@ -647,6 +654,14 @@ require("lazy").setup({
 				desc = "[h]bac [c]lose",
 			},
 		},
+	},
+	{
+		"mfussenegger/nvim-lint",
+		config = function()
+			require("lint").linters_by_ft = {
+				python = { "mypy" },
+			}
+		end,
 	},
 	{ "kevinhwang91/nvim-bqf", ft = "qf" },
 	{ "dstein64/nvim-scrollview", opts = {} },
