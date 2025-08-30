@@ -3,7 +3,7 @@
 
 vim.keymap.set("i", "<C-j>", "| 🙑  dismint<CR>| YW5uaWUgPDM=")
 
--- SECTION: config
+--  SECTION: config
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
@@ -33,7 +33,7 @@ vim.g.have_nerd_font = true
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
--- SECTION: autocmds
+--  SECTION: autocmds
 
 vim.api.nvim_create_autocmd("InsertEnter", {
 	callback = function()
@@ -67,7 +67,7 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
 	end,
 })
 
--- SECTION: utils
+--  SECTION: utils
 
 local imthemap = function(mode, keys, func, desc, opts)
 	opts["desc"] = desc
@@ -100,7 +100,7 @@ local attachBindings = function(bufnr, client)
 	end
 end
 
--- SECTION: plugins
+--  SECTION: plugins
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 ---@diagnostic disable-next-line: undefined-field

@@ -4,32 +4,18 @@
 function fish_greeting
 end
 
+#  SECTION: yazi
 function y
 	set tmp (mktemp -t "yazi-cwd.XXXXXX")
 	yazi $argv --cwd-file="$tmp"
-	if set cwd (command cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
-		builtin cd -- "$cwd"
+	if read -z cwd < "$tmp"; and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
+    cd -- "$cwd"
 	end
 	rm -f -- "$tmp"
 end
 
-function simg
-    if test (count $argv) -eq 0
-        echo "needs filename"
-        return 1
-    end
-    set filename $argv[1]
 
-    wl-paste -t image/png > $filename.png
-end
-
-set -gx BROWSER google-chrome-stable
-set -gx EDITOR nvim
-
-set -Ua fish_user_paths ~/factorio/bin/x64
-
-
-# starship
+#  SECTION: starship
 function starship_transient_prompt_func
   starship module character
 end
@@ -40,15 +26,15 @@ end
 starship init fish | source
 enable_transience
 
-# eza
+#  SECTION: eza
 alias ls eza
 alias lsa "eza -a"
 
-# zoxide
+#  SECTION: zoxide
 zoxide init fish | source
 alias cd z
 
-# fzf
+#  SECTION: fzf
 fzf --fish | source
 set -gx FZF_DEFAULT_OPTS "$FZF_DEFAULT_OPTS
   --color=fg:-1,fg+:#8EA4A2,bg:-1,bg+:#393836
@@ -57,4 +43,19 @@ set -gx FZF_DEFAULT_OPTS "$FZF_DEFAULT_OPTS
   --color=border:#393836,label:#aeaeae,query:#d9d9d9
   --border=rounded --border-label= --preview-window=border-rounded --prompt='> '
   --marker='>' --pointer='◆' --separator='─' --scrollbar='│'"
+
+#  SECTION: functions
+function simg
+    if test (count $argv) -eq 0
+        echo "needs filename"
+        return 1
+    end
+    set filename $argv[1]
+
+    wl-paste -t image/png > $filename.png
+end
+
+#  SECTION: sets
+set -gx BROWSER google-chrome-stable
+set -gx EDITOR nvim
 
