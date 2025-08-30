@@ -69,29 +69,14 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
 
 -- SECTION: utils
 
-local vomap = function(mode, keys, func, desc, opts)
+local imthemap = function(mode, keys, func, desc, opts)
 	opts["desc"] = desc
 	vim.keymap.set(mode, keys, func, opts)
-end
-local vmap = function(mode, keys, func, desc)
-	vomap(mode, keys, func, desc, {})
-end
-local nomap = function(keys, func, desc, opts)
-	vomap("n", keys, func, desc, opts)
-end
-local nmap = function(keys, func, desc)
-	nomap(keys, func, desc, {})
-end
-local iomap = function(keys, func, desc, opts)
-	vomap("i", keys, func, desc, opts)
-end
-local imap = function(keys, func, desc)
-	iomap(keys, func, desc, {})
 end
 
 local attachBindings = function(bufnr, client)
 	local lspmap = function(keys, func, desc)
-		nomap(keys, func, desc, { buffer = bufnr })
+		imthemap("n", keys, func, desc, { buffer = bufnr })
 	end
 
 	local tb = require("telescope.builtin")
@@ -228,10 +213,10 @@ require("lazy").setup({
 			require("luasnip.loaders.from_snipmate").lazy_load()
 			luasnip.config.setup()
 
-			vomap({ "i", "s" }, "<C-l>", function()
+			imthemap({ "i", "s" }, "<C-l>", function()
 				luasnip.jump(1)
 			end, "jump 1 cmp", { silent = true })
-			vomap({ "i", "s" }, "<C-h>", function()
+			imthemap({ "i", "s" }, "<C-h>", function()
 				luasnip.jump(-1)
 			end, "jump -1 cmp", { silent = true })
 
@@ -318,44 +303,42 @@ require("lazy").setup({
 			pcall(require("telescope").load_extension, "ui-select")
 
 			local tmap = function(keys, func, desc)
-				nmap(keys, function()
+				imthemap("n", keys, function()
 					func({
 						preview_title = "preview",
 						prompt_title = desc,
 					})
-				end, desc)
+				end, desc, {})
 			end
 
 			local tb = require("telescope.builtin")
-			tmap("<leader>fh", tb.help_tags, "[f]ind [h]elp")
-			tmap("<leader>fk", tb.keymaps, "[f]ind [k]eymaps")
-			tmap("<leader>ff", tb.find_files, "[f]ind [f]iles")
-			tmap("<leader>fs", tb.builtin, "[f]ind [s]elect")
-			tmap("<leader>fw", tb.grep_string, "[f]ind current [w]ord")
-			tmap("<leader>fg", tb.live_grep, "[f]ind by [g]rep")
-			tmap("<leader>fd", tb.diagnostics, "[f]ind [d]iagnostics")
-			tmap("<leader>fr", tb.resume, "[f]ind [r]esume")
-			tmap("<leader>fc", tb.oldfiles, "[f]ind re[c]ent files")
-			tmap("<leader>fb", tb.buffers, "[f]ind [b]uffers")
+			tmap("<leader>lh", tb.help_tags, "[l]ind [h]elp")
+			tmap("<leader>lk", tb.keymaps, "[l]ind [k]eymaps")
+			tmap("<leader>lf", tb.find_files, "[l]ind [f]iles")
+			tmap("<leader>ls", tb.builtin, "[l]ind [s]elect")
+			tmap("<leader>lw", tb.grep_string, "[l]ind current [w]ord")
+			tmap("<leader>lg", tb.live_grep, "[l]ind by [g]rep")
+			tmap("<leader>ld", tb.diagnostics, "[l]ind [d]iagnostics")
+			tmap("<leader>lb", tb.buffers, "[l]ind [b]uffers")
 
-			nmap("<leader>/", function()
+			imthemap("n", "<leader>/", function()
 				tb.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
 					winblend = 20,
 					previewer = false,
 					prompt_title = "find in current buffer",
 				}))
-			end, "fearch in current buffer")
+			end, "fearch in current buffer", {})
 
-			nmap("<leader>f/", function()
+			imthemap("n", "<leader>l/", function()
 				tb.live_grep({
 					grep_open_files = true,
-					prompt_title = "[f]ind open files",
+					prompt_title = "find open files",
 				})
-			end, "[f]ind in open files")
+			end, "[l]ind in open files", {})
 
-			nmap("<leader>fn", function()
+			imthemap("n", "<leader>ln", function()
 				tb.find_files({ cwd = vim.fn.stdpath("config"), preview_title = "preview" })
-			end, "[f]ind [n]eovim files")
+			end, "[l]ind [n]eovim files", {})
 		end,
 	},
 	{
@@ -409,7 +392,7 @@ require("lazy").setup({
 			local conform = require("conform")
 			conform.setup(opts)
 
-			nmap("<leader>fm", conform.format, "[f]or[m]at")
+			imthemap("n", "<leader>fm", conform.format, "[f]or[m]at", {})
 
 			vim.api.nvim_create_autocmd("BufWritePre", {
 				pattern = "*.py,*.lua,*.zig,*.js,*.ts,*.json,*.html,*.css",
@@ -455,7 +438,7 @@ require("lazy").setup({
 			require("todo-comments").setup(opts)
 		end,
 
-		nmap("<leader>ft", ":TodoTelescope<CR>", "[f]ind [t]odos"),
+		imthemap("n", "<leader>lt", ":TodoTelescope<CR>", "[l]ind [t]odos", {}),
 	},
 	{
 		"rebelot/kanagawa.nvim",
@@ -501,7 +484,7 @@ require("lazy").setup({
 					{
 						function()
 							local cur_buf = vim.api.nvim_get_current_buf()
-							return require("hbac.state").is_pinned(cur_buf) and "📍" or ""
+							return require("hbac.state").is_pinned(cur_buf) and "󰐃" or "󰤱"
 						end,
 						color = { fg = "#ef5f6b", gui = "bold" },
 					},
@@ -538,16 +521,35 @@ require("lazy").setup({
 	},
 	{
 		"mikavilpas/yazi.nvim",
+		version = "v11.10.2",
 		event = "VeryLazy",
 		dependencies = {
 			"folke/snacks.nvim",
+			{ "nvim-lua/plenary.nvim", lazy = true },
 		},
-		config = function()
-			yazi = require("yazi")
-			vmap({ "n", "v" }, "<leader>fy", "<cmd>Yazi<cr>", "open [y]azi at the current [f]ile")
-			vmap({ "n", "v" }, "<leader>dy", "<cmd>Yazi cwd<cr>", "open [y]azi at the current [d]irectory")
-			vmap({ "n", "v" }, "<leader>y", yazi.toggle, "open last [y]azi session")
-		end,
+		keys = {
+			{
+				"<leader>dy",
+				"<cmd>Yazi cwd<CR>",
+				{ "n", "v" },
+				"open [y]azi at the current working [d]irectory",
+			},
+			{
+				"<leader>fy",
+				"<cmd>Yazi<CR>",
+				{ "n", "v" },
+				"open [y]azi at the current [f]ile",
+			},
+			{
+				"<leader>y",
+				"<cmd>Yazi toggle<CR>",
+				{ "n", "v" },
+				"open last [y]azi session",
+			},
+		},
+		opts = {
+			open_for_directories = true,
+		},
 	},
 	{
 		"folke/noice.nvim",
@@ -579,12 +581,12 @@ require("lazy").setup({
 		"folke/snacks.nvim",
 		priority = 1000,
 		lazy = false,
+		---@diagnostic disable-next-line: undefined-doc-name
 		---@type snacks.Config
 		opts = {
 			git = { enabled = false },
 			bigfile = { enabled = true },
 			dashboard = { enabled = true },
-			explorer = { enabled = true },
 			indent = { enabled = true },
 			input = { enabled = true },
 			picker = { enabled = true },
