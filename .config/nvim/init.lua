@@ -397,6 +397,13 @@ require("lazy").setup({
 			vim.api.nvim_create_autocmd("BufWritePre", {
 				pattern = "*.py,*.lua,*.zig,*.js,*.ts,*.json,*.html,*.css",
 				callback = function(args)
+					if vim.bo.filetype == "zig" then
+						vim.lsp.buf.code_action({
+							context = { only = { "source.organizeImports" }, diagnostics = {} },
+							apply = true,
+							bufnr = args.buf,
+						})
+					end
 					conform.format({ bufnr = args.buf })
 				end,
 			})
