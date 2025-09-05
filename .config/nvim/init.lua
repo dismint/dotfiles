@@ -401,7 +401,6 @@ require("lazy").setup({
 						vim.lsp.buf.code_action({
 							context = { only = { "source.organizeImports" }, diagnostics = {} },
 							apply = true,
-							bufnr = args.buf,
 						})
 					end
 					conform.format({ bufnr = args.buf })
