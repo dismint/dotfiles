@@ -151,11 +151,7 @@ require("lazy").setup({
 					},
 				},
 				basedpyright = {},
-				zls = {
-					root_dir = function(fname)
-						return require("lspconfig").util.root_pattern(".git")(fname) or vim.loop.os_homedir()
-					end,
-				},
+				zls = {},
 				lua_ls = {
 					settings = {
 						Lua = {
