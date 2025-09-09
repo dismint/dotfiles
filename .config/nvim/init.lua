@@ -135,10 +135,24 @@ require("lazy").setup({
 			vim.g.zig_fmt_autosave = 0
 
 			local servers = {
+				gopls = {
+					settings = {
+						gopls = {
+							hints = {
+								assignVariableTypes = true,
+								compositeLiteralFields = true,
+								compositeLiteralTypes = true,
+								constantValues = true,
+								functionTypeParameters = true,
+								parameterNames = true,
+								rangeVariableTypes = true,
+							},
+						},
+					},
+				},
 				basedpyright = {},
 				zls = {
 					root_dir = function(fname)
-						---@diagnostic disable-next-line: undefined-field
 						return require("lspconfig").util.root_pattern(".git")(fname) or vim.loop.os_homedir()
 					end,
 				},
@@ -148,7 +162,7 @@ require("lazy").setup({
 							completion = {
 								callSnippet = "Replace",
 							},
-							diagnostics = { disable = { "missing-fields" } },
+							diagnostics = { disable = { "missing-fields", "undefined-field" } },
 						},
 					},
 				},
@@ -161,25 +175,22 @@ require("lazy").setup({
 				"black",
 				"prettier",
 				"mypy",
+				"goimports",
 			})
-
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
-			require("mason-lspconfig").setup({
-				handlers = {
-					function(server_name)
-						local server = servers[server_name] or {}
-						server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-						require("lspconfig")[server_name].setup(server)
-					end,
-				},
-			})
+
+			for server_name, server_config in pairs(servers) do
+				vim.lsp.enable(server_name, true)
+				server_config.capabilities = capabilities
+				vim.lsp.config(server_name, server_config)
+			end
 		end,
 	},
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 		opts = {
-			ensure_installed = { "lua", "python", "zig" },
+			ensure_installed = { "lua", "python", "zig", "go" },
 			auto_install = true,
 			highlight = {
 				enable = true,
@@ -188,7 +199,6 @@ require("lazy").setup({
 		},
 		config = function(_, opts)
 			require("nvim-treesitter.install").prefer_git = true
-			---@diagnostic disable-next-line: missing-fields
 			require("nvim-treesitter.configs").setup(opts)
 		end,
 	},
@@ -379,6 +389,7 @@ require("lazy").setup({
 				lua = { "stylua" },
 				python = { "black" },
 				zig = { "zigfmt" },
+				go = { "goimports" },
 				javascript = { "prettier" },
 				typescript = { "prettier" },
 				typescriptreact = { "prettier" },
@@ -395,7 +406,7 @@ require("lazy").setup({
 			imthemap("n", "<leader>fm", conform.format, "[f]or[m]at", {})
 
 			vim.api.nvim_create_autocmd("BufWritePre", {
-				pattern = "*.py,*.lua,*.zig,*.js,*.ts,*.json,*.html,*.css",
+				pattern = "*.py,*.lua,*.zig,*.js,*.ts,*.json,*.html,*.css,*.go",
 				callback = function(args)
 					if vim.bo.filetype == "zig" then
 						vim.lsp.buf.code_action({
