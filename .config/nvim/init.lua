@@ -8,8 +8,8 @@ vim.keymap.set("i", "<C-j>", "| 🙑  dismint<CR>| YW5uaWUgPDM=")
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-vim.opt.shiftwidth = 2
-vim.opt.tabstop = 2
+vim.opt.shiftwidth = 4
+vim.opt.tabstop = 4
 vim.opt.expandtab = true
 vim.opt.smartindent = true
 vim.opt.autoindent = true
@@ -73,6 +73,15 @@ local imthemap = function(mode, keys, func, desc, opts)
 	opts["desc"] = desc
 	vim.keymap.set(mode, keys, func, opts)
 end
+
+imthemap("n", "<leader>oi", function()
+	if vim.bo.filetype == "zig" then
+		vim.lsp.buf.code_action({
+			context = { only = { "source.organizeImports" }, diagnostics = {} },
+			apply = false,
+		})
+	end
+end, "[o]rganize [i]mports", {})
 
 local attachBindings = function(bufnr, client)
 	local lspmap = function(keys, func, desc)
@@ -404,12 +413,6 @@ require("lazy").setup({
 			vim.api.nvim_create_autocmd("BufWritePre", {
 				pattern = "*.py,*.lua,*.zig,*.js,*.ts,*.json,*.html,*.css,*.go",
 				callback = function(args)
-					if vim.bo.filetype == "zig" then
-						vim.lsp.buf.code_action({
-							context = { only = { "source.organizeImports" }, diagnostics = {} },
-							apply = true,
-						})
-					end
 					conform.format({ bufnr = args.buf })
 				end,
 			})
