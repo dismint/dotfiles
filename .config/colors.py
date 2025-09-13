@@ -93,7 +93,7 @@ colors = {
     "lotusTeal1": "#4e8ca2",
     "lotusTeal2": "#6693bf",
     "lotusTeal3": "#5a7785",
-    "lotusCyan": "#d7e3d8"
+    "lotusCyan": "#d7e3d8",
 }
 
 #### IMPL ####
@@ -119,7 +119,7 @@ def print_color_list():
     for color in colors:
         print(f"\n{color}: ", end="")
         hex_color = colors[color]
-        r, g, b = tuple(int(hex_color[i:i+2], 16) for i in (1, 3, 5))
+        r, g, b = tuple(int(hex_color[i : i + 2], 16) for i in (1, 3, 5))
         color_256 = rgb_to_256(r, g, b)
         print_colored_hex(hex_color, color_256)
 

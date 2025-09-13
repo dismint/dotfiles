@@ -78,7 +78,7 @@ imthemap("n", "<leader>oi", function()
 	if vim.bo.filetype == "zig" then
 		vim.lsp.buf.code_action({
 			context = { only = { "source.organizeImports" }, diagnostics = {} },
-			apply = false,
+			apply = true,
 		})
 	end
 end, "[o]rganize [i]mports", {})
