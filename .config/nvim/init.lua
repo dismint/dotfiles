@@ -447,6 +447,7 @@ require("lazy").setup({
 			signs = false,
 			keywords = {
 				SECTION = { icon = "S", color = "info" },
+				STEP = { icon = "P", color = "hint" },
 				TODO = { icon = "T", color = "info" },
 			},
 		},
