@@ -159,7 +159,7 @@ require("lazy").setup({
 						},
 					},
 				},
-				basedpyright = {},
+				pyrefly = {},
 				zls = {},
 				lua_ls = {
 					settings = {
@@ -403,6 +403,9 @@ require("lazy").setup({
 				css = { "prettier" },
 				scss = { "prettier" },
 			},
+			format_on_save = {
+				timeout_ms = 5000,
+			},
 		},
 		config = function(_, opts)
 			local conform = require("conform")
@@ -450,11 +453,13 @@ require("lazy").setup({
 				STEP = { icon = "P", color = "hint" },
 				TODO = { icon = "T", color = "info" },
 			},
+			highlight = {
+				pattern = { [[.*<(KEYWORDS)\s*\d+\s*:]], [[.*<(KEYWORDS)\s*:]] },
+			},
 		},
 		config = function(_, opts)
 			require("todo-comments").setup(opts)
 		end,
-
 		imthemap("n", "<leader>lt", ":TodoTelescope<CR>", "[l]ind [t]odos", {}),
 	},
 	{
