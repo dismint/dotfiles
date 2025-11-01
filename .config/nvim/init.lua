@@ -144,21 +144,6 @@ require("lazy").setup({
 			vim.g.zig_fmt_autosave = 0
 
 			local servers = {
-				gopls = {
-					settings = {
-						gopls = {
-							hints = {
-								assignVariableTypes = true,
-								compositeLiteralFields = true,
-								compositeLiteralTypes = true,
-								constantValues = true,
-								functionTypeParameters = true,
-								parameterNames = true,
-								rangeVariableTypes = true,
-							},
-						},
-					},
-				},
 				pyrefly = {},
 				zls = {},
 				lua_ls = {
@@ -180,7 +165,6 @@ require("lazy").setup({
 				"black",
 				"prettier",
 				"mypy",
-				"goimports",
 			})
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
@@ -195,7 +179,7 @@ require("lazy").setup({
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 		opts = {
-			ensure_installed = { "lua", "python", "zig", "go" },
+			ensure_installed = { "lua", "python", "zig" },
 			auto_install = true,
 			highlight = {
 				enable = true,
@@ -694,3 +678,6 @@ require("lazy").setup({
 	"tpope/vim-fugitive",
 	"mbbill/undotree",
 })
+
+-- set command line height to 0
+vim.o.cmdheight = 1
