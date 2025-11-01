@@ -14,6 +14,10 @@ I use [GNU Stow](https://www.gnu.org/software/stow/) to manage my dotfiles on my
 # `nvim`
 My configuration is contained within one file and aims to be as self contained as possible, downloading both the plugins and their manager automatically. Run `:Copilot` after initial setup to login.
 
+# `WSL`
+## Clipbaord
+In order to have `nvim` work correctly with the `WSL` clipbaord, install [win32yank](https://github.com/equalsraf/win32yank) onto `WSL`
+
 # `hyprland`
 ## System Setup
 
