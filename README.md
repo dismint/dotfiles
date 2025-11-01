@@ -7,19 +7,12 @@
 </div>
 
 # Overview
-This is a collection of my dotfiles and other configuration files I use in various parts of my EndeavourOS + Hyprland setup. Primarily for personal use but let me know if you happen to find something useful in here for yourself!
+This is a collection of my dotfiles I use in my workflow, both on my EndeavourOS + Hyprland setup as well as WSL. Primarily for personal use but let me know if you happen to find something useful in here for yourself!
 
-I use [GNU Stow](https://www.gnu.org/software/stow/) to manage my dotfiles on my system.
+I use [GNU Stow](https://www.gnu.org/software/stow/) to manage my dotfiles on my system, as well as [Home Manager](https://github.com/nix-community/home-manager) for managing software dependencies.
 
 # `nvim`
-My configuration is contained within one file and aims to be as self contained as possible, downloading both the plugins and their manager automatically.
-
-## Dependencies
-- `npm` for some language servers, will install `nodejs` as a dependency automatically
-- `ripgrep` for better grep
-
-## Post Setup
-- `:Copilot`
+My configuration is contained within one file and aims to be as self contained as possible, downloading both the plugins and their manager automatically. Run `:Copilot` after initial setup to login.
 
 # `hyprland`
 ## System Setup
