@@ -162,6 +162,7 @@ require("lazy").setup({
 			local ensure_installed = vim.tbl_keys(servers)
 			vim.list_extend(ensure_installed, {
 				"stylua",
+				"nixfmt",
 				"black",
 				"prettier",
 				"mypy",
@@ -386,6 +387,7 @@ require("lazy").setup({
 				html = { "prettier" },
 				css = { "prettier" },
 				scss = { "prettier" },
+				nix = { "nixfmt" },
 			},
 			format_on_save = {
 				timeout_ms = 5000,
@@ -398,7 +400,7 @@ require("lazy").setup({
 			imthemap("n", "<leader>fm", conform.format, "[f]or[m]at", {})
 
 			vim.api.nvim_create_autocmd("BufWritePre", {
-				pattern = "*.py,*.lua,*.zig,*.js,*.ts,*.json,*.html,*.css,*.go",
+				pattern = "*.py,*.lua,*.zig,*.js,*.ts,*.json,*.html,*.css,*.nix",
 				callback = function(args)
 					conform.format({ bufnr = args.buf })
 				end,
