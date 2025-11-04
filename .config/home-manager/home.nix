@@ -11,6 +11,7 @@
     pkgs.gh
     pkgs.git
     pkgs.neovim
+    pkgs.tmux
     pkgs.ripgrep
     pkgs.yazi
     pkgs.starship
@@ -21,6 +22,7 @@
     pkgs.unzip
     pkgs.fzf
     pkgs.openssh
+    pkgs.uv
 
     # coding
     pkgs.nodejs_24

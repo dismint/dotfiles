@@ -176,7 +176,7 @@ require("lazy").setup({
 			vim.list_extend(ensure_installed, {
 				"stylua",
 				"nixfmt",
-				"black",
+				"ruff",
 				"prettier",
 				"mypy",
 			})
@@ -390,7 +390,7 @@ require("lazy").setup({
 			notify_on_error = false,
 			formatters_by_ft = {
 				lua = { "stylua" },
-				python = { "black" },
+				python = { "ruff_format", "ruff_organize_imports" },
 				zig = { "zigfmt" },
 				go = { "goimports" },
 				javascript = { "prettier" },
@@ -682,7 +682,7 @@ require("lazy").setup({
 		"mfussenegger/nvim-lint",
 		config = function()
 			require("lint").linters_by_ft = {
-				python = { "mypy" },
+				python = { "mypy", "ruff" },
 			}
 		end,
 	},
