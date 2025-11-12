@@ -8,10 +8,8 @@
     eza
     fish
     fzf
-    gcc
     gh
     git
-    gnumake
     neovim
     openssh
     ripgrep
@@ -23,7 +21,18 @@
     yazi
     zoxide
 
-    # coding
+    # mason
+    lua-language-server
+    nixfmt
+    prettier
+    pyrefly
+    ruff
+    stylua
+    zls
+
+    # languages
+    gcc
+    gnumake
     nodejs_24
     python314
     zig

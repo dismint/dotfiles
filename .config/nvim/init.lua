@@ -171,17 +171,6 @@ require("lazy").setup({
 				},
 			}
 
-			require("mason").setup()
-			local ensure_installed = vim.tbl_keys(servers)
-			vim.list_extend(ensure_installed, {
-				"stylua",
-				"nixfmt",
-				"ruff",
-				"prettier",
-				"mypy",
-			})
-			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
-
 			for server_name, server_config in pairs(servers) do
 				vim.lsp.enable(server_name, true)
 				server_config.capabilities = capabilities
@@ -682,7 +671,7 @@ require("lazy").setup({
 		"mfussenegger/nvim-lint",
 		config = function()
 			require("lint").linters_by_ft = {
-				python = { "mypy", "ruff" },
+				python = { "ruff" },
 			}
 		end,
 	},
