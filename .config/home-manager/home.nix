@@ -21,7 +21,8 @@
     yazi
     zoxide
 
-    # mason
+    # language servers / features
+    basedpyright
     lua-language-server
     nixfmt
     prettier
