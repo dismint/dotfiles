@@ -157,7 +157,7 @@ require("lazy").setup({
 			vim.g.zig_fmt_autosave = 0
 
 			local servers = {
-				basedpyright = {},
+				pyrefly = {},
 				zls = {},
 				lua_ls = {
 					settings = {
