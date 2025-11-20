@@ -509,6 +509,14 @@ require("lazy").setup({
 		"ggandor/leap.nvim",
 		config = function()
 			local leap = require("leap")
+
+			imthemap("n", "s", function()
+				leap.leap({})
+			end, "leap forwards", {})
+			imthemap("n", "S", function()
+				leap.leap({ backward = true })
+			end, "leap backwards", {})
+
 			leap.opts.case_sensitive = true
 		end,
 	},
