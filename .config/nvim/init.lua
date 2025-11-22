@@ -25,6 +25,8 @@ vim.opt.cursorcolumn = true
 vim.opt.colorcolumn = "80"
 vim.opt.scrolloff = 10
 
+vim.o.winborder = "rounded"
+
 vim.opt.updatetime = 250
 vim.opt.timeoutlen = 500
 vim.opt.undofile = true
@@ -112,7 +114,7 @@ local attachBindings = function(bufnr, client)
 
 	lspmap("<leader>rn", vim.lsp.buf.rename, "[r]e[n]ame")
 	lspmap("<leader>ca", vim.lsp.buf.code_action, "[c]ode [a]ction")
-	lspmap("K", vim.lsp.buf.hover, "hover lsp documentation")
+	lspmap("K", require("noice.lsp").hover, "hover lsp do[K]umentation")
 	lspmap("<leader>hd", vim.diagnostic.open_float, "[h]over [d]iagnostic")
 
 	if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
