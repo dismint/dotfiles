@@ -160,6 +160,7 @@ require("lazy").setup({
 
 			local servers = {
 				pyrefly = {},
+				buf_ls = {},
 				zls = {},
 				lua_ls = {
 					settings = {
@@ -170,6 +171,11 @@ require("lazy").setup({
 							diagnostics = { disable = { "missing-fields", "undefined-field" } },
 						},
 					},
+				},
+				buf_ls = {
+					reuse_client = function()
+						return false
+					end,
 				},
 			}
 
@@ -380,18 +386,20 @@ require("lazy").setup({
 		opts = {
 			notify_on_error = false,
 			formatters_by_ft = {
-				lua = { "stylua" },
-				python = { "ruff_format", "ruff_organize_imports" },
-				zig = { "zigfmt" },
+				css = { "prettier" },
 				go = { "goimports" },
+				html = { "prettier" },
 				javascript = { "prettier" },
+				json = { "prettier" },
+				lua = { "stylua" },
+				nix = { "nixfmt" },
+				proto = { "buf" },
+				python = { "ruff_format", "ruff_organize_imports" },
+				scss = { "prettier" },
+				sh = { "shfmt" },
 				typescript = { "prettier" },
 				typescriptreact = { "prettier" },
-				json = { "prettier" },
-				html = { "prettier" },
-				css = { "prettier" },
-				scss = { "prettier" },
-				nix = { "nixfmt" },
+				zig = { "zigfmt" },
 			},
 			format_on_save = {
 				timeout_ms = 5000,
@@ -404,7 +412,7 @@ require("lazy").setup({
 			imthemap("n", "<leader>fm", conform.format, "[f]or[m]at", {})
 
 			vim.api.nvim_create_autocmd("BufWritePre", {
-				pattern = "*.py,*.lua,*.zig,*.js,*.ts,*.json,*.html,*.css,*.nix",
+				pattern = "*.py,*.lua,*.zig,*.js,*.ts,*.json,*.html,*.css,*.nix,*.sh,*.proto",
 				callback = function(args)
 					conform.format({ bufnr = args.buf })
 				end,

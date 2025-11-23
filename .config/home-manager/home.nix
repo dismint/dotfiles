@@ -23,11 +23,13 @@
 
     # language servers / features
     basedpyright
+    buf
     lua-language-server
     nixfmt
     prettier
     pyrefly
     ruff
+    shfmt
     stylua
     zls
 
