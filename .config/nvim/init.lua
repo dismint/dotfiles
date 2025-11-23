@@ -160,7 +160,6 @@ require("lazy").setup({
 
 			local servers = {
 				pyrefly = {},
-				buf_ls = {},
 				zls = {},
 				lua_ls = {
 					settings = {
