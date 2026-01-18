@@ -1,8 +1,7 @@
 <div align="center">
   
-# dotfiles [![Email](https://img.shields.io/badge/EMAIL-mintjjc%40gmail.com-93BFCF?style=flat&logoSize=auto&labelColor=EEE9DA)](mailto:mintjjc@gmail.com)
-
-[Overview](#overview) • [`nvim`](#-nvim-) • [`WSL`](#-WSL-) • [`hyprland`](#-hyprland-)
+# dotfiles
+[![Email](https://img.shields.io/badge/EMAIL-mintjjc%40gmail.com-4b726e?style=flat&labelColor=4d4539)](mailto:mintjjc@gmail.com) [![Static Badge](https://img.shields.io/badge/WEBSITE-dismint.dev-77743b?style=flat&labelColor=4d4539)](https://www.dismint.dev/)
 
 </div>
 
