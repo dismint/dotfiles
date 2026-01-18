@@ -71,4 +71,3 @@ end
 
 set -gx BROWSER google-chrome-stable
 set -gx EDITOR nvim
-

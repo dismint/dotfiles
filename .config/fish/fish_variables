@@ -25,4 +25,4 @@ SETUVAR fish_pager_color_description:\x2387C3AA\x1e\x2di
 SETUVAR fish_pager_color_prefix:normal\x1e\x2d\x2dbold\x1e\x2d\x2dunderline
 SETUVAR fish_pager_color_progress:\x2d\x2dbackground\x3d\x238A9A7B\x1e\x23282727
 SETUVAR fish_pager_color_selected_background:\x2dr
-SETUVAR fish_user_paths:/home/dismint/factorio\x1e/home/dismint/factorio/bin/x64
+SETUVAR fish_user_paths:/home/dismint/go/bin

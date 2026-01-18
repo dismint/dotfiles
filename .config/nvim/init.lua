@@ -25,10 +25,10 @@ vim.opt.cursorcolumn = true
 vim.opt.colorcolumn = "80"
 vim.opt.scrolloff = 10
 
-vim.o.winborder = "rounded"
-
 vim.opt.updatetime = 250
 vim.opt.timeoutlen = 500
+
+vim.o.winborder = "rounded"
 vim.opt.undofile = true
 vim.opt.termguicolors = true
 vim.g.have_nerd_font = true
@@ -61,13 +61,6 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 	end,
 })
 
-vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-	pattern = "*.tex",
-	callback = function()
-		vim.bo.filetype = "tex"
-	end,
-})
-
 vim.api.nvim_create_autocmd("TextYankPost", {
 	desc = "highlight when yanking (copying) text",
 	group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
@@ -76,9 +69,27 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
-vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+vim.api.nvim_create_autocmd("BufWritePost", {
 	callback = function()
 		require("lint").try_lint()
+	end,
+})
+
+vim.api.nvim_create_autocmd({ "RecordingEnter", "RecordingLeave" }, {
+	desc = "Notify when recording a macro",
+	group = vim.api.nvim_create_augroup("macro-notify", { clear = true }),
+	callback = function(event)
+		local msg
+		if event.event == "RecordingEnter" then
+			msg = "Recording to register @"
+		else
+			msg = "Recorded to register @"
+		end
+		vim.notify(
+			msg .. vim.fn.reg_recording(),
+			vim.log.levels.INFO,
+			{ title = "Macro", timeout = 5000, hide_from_history = false }
+		)
 	end,
 })
 
@@ -160,6 +171,8 @@ require("lazy").setup({
 
 			local servers = {
 				pyrefly = {},
+				svelte = {},
+				gopls = {},
 				zls = {},
 				lua_ls = {
 					settings = {
@@ -386,7 +399,7 @@ require("lazy").setup({
 			notify_on_error = false,
 			formatters_by_ft = {
 				css = { "prettier" },
-				go = { "goimports" },
+				go = { "gofmt" },
 				html = { "prettier" },
 				javascript = { "prettier" },
 				json = { "prettier" },
@@ -396,6 +409,7 @@ require("lazy").setup({
 				python = { "ruff_format", "ruff_organize_imports" },
 				scss = { "prettier" },
 				sh = { "shfmt" },
+				svelte = { "prettier" },
 				typescript = { "prettier" },
 				typescriptreact = { "prettier" },
 				zig = { "zigfmt" },
@@ -411,8 +425,28 @@ require("lazy").setup({
 			imthemap("n", "<leader>fm", conform.format, "[f]or[m]at", {})
 
 			vim.api.nvim_create_autocmd("BufWritePre", {
-				pattern = "*.py,*.lua,*.zig,*.js,*.ts,*.json,*.html,*.css,*.nix,*.sh,*.proto",
+				pattern = {
+					"*.css",
+					"*.html",
+					"*.js",
+					"*.json",
+					"*.lua",
+					"*.nix",
+					"*.proto",
+					"*.py",
+					"*.sh",
+					"*.svelte",
+					"*.ts",
+					"*.zig",
+				},
 				callback = function(args)
+					if vim.g.disable_autoformat then
+						return
+					end
+					if vim.b[args.buf].disable_autoformat then
+						return
+					end
+
 					conform.format({ bufnr = args.buf })
 				end,
 			})
@@ -587,6 +621,20 @@ require("lazy").setup({
 		config = function()
 			require("noice").setup({
 				lsp = {
+					hover = {
+						enabled = true,
+						view = "hover",
+						opts = {
+							size = {
+								max_width = math.floor(vim.o.columns * 0.75),
+								max_height = math.floor(vim.o.lines * 0.2),
+							},
+							position = {
+								row = 2,
+								col = 2,
+							},
+						},
+					},
 					override = {
 						["vim.lsp.util.convert_input_to_markdown_lines"] = true,
 						["vim.lsp.util.stylize_markdown"] = true,
