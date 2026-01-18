@@ -50,7 +50,6 @@ error_symbol = "[\\$](fg:#c4746e)"
 style = "fg:#8992a7"
 [git_commit]
 style = "fg:#8992a7"
-only_detached = false
 [git_metrics]
 added_style = "bold fg:#87A987"
 deleted_style = "bold fg:#C4746E"
