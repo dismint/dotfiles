@@ -1,5 +1,5 @@
 {
-  description = "Home Manager configuration of dismint";
+  description = "Home Manager configuration of dismint.";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -9,11 +9,13 @@
     };
   };
 
-  outputs = { nixpkgs, home-manager, ... }:
+  outputs =
+    { nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-    in {
+    in
+    {
       homeConfigurations."dismint" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 

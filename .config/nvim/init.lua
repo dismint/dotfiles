@@ -35,18 +35,18 @@ vim.g.have_nerd_font = true
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
-vim.g.clipboard = {
-	name = "win32yank",
-	copy = {
-		["+"] = "win32yank.exe -i --crlf",
-		["*"] = "win32yank.exe -i --crlf",
-	},
-	paste = {
-		["+"] = "win32yank.exe -o --lf",
-		["*"] = "win32yank.exe -o --lf",
-	},
-	cache_enabled = 0,
-}
+-- vim.g.clipboard = {
+-- 	name = "win32yank",
+-- 	copy = {
+-- 		["+"] = "win32yank.exe -i --crlf",
+-- 		["*"] = "win32yank.exe -i --crlf",
+-- 	},
+-- 	paste = {
+-- 		["+"] = "win32yank.exe -o --lf",
+-- 		["*"] = "win32yank.exe -o --lf",
+-- 	},
+-- 	cache_enabled = 0,
+-- }
 
 --  SECTION: autocmds
 
@@ -90,6 +90,16 @@ vim.api.nvim_create_autocmd({ "RecordingEnter", "RecordingLeave" }, {
 			vim.log.levels.INFO,
 			{ title = "Macro", timeout = 5000, hide_from_history = false }
 		)
+	end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "nix",
+	callback = function()
+		vim.opt_local.tabstop = 2
+		vim.opt_local.shiftwidth = 2
+		vim.opt_local.softtabstop = 2
+		vim.opt_local.expandtab = true
 	end,
 })
 
