@@ -32,6 +32,7 @@
     go
     google-chrome
     gopls
+    kdlfmt
     libx11
     litecli
     lua-language-server
