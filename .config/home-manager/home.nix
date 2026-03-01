@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  awww,
+  ...
+}:
 
 {
   nixpkgs = {
@@ -19,10 +24,12 @@
   home.stateVersion = "25.11";
   home.packages = with pkgs; [
     asciinema
+    btop
     buf
     bun
     discord
     eza
+    ffmpeg
     fish
     fzf
     gcc
@@ -45,6 +52,7 @@
     prettier
     pyrefly
     python314
+    qt6.qtdeclarative
     quickshell
     ripgrep
     ruff
@@ -65,6 +73,8 @@
     zk
     zls
     zoxide
+
+    awww.packages.${pkgs.stdenv.hostPlatform.system}.awww
   ];
 
   programs.home-manager.enable = true;

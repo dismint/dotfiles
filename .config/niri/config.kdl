@@ -5,6 +5,25 @@ input {
     }
     warp-mouse-to-focus
 }
+output "DP-1" {
+    mode "2560x1440@119.998"
+    position x=1440 y=1080
+    focus-at-startup
+ // backdrop-color "#FF00FF"
+}
+output "DP-2" {
+    mode "1920x1080@60.000"
+    position x=1440 y=0
+}
+output "HDMI-A-1" {
+    mode "1920x1080@60.000"
+    position x=3360 y=0
+}
+output "DP-3" {
+    mode "2560x1440@59.951"
+    position x=0 y=0
+    transform "90"
+}
 layout {
     gaps 20
     always-center-single-column
@@ -50,6 +69,9 @@ binds {
     }
     Mod+D {
         spawn "fuzzel"
+    }
+    Mod+B {
+        spawn "google-chrome-stable"
     }
     Mod+O repeat=false {
         toggle-overview
@@ -151,4 +173,5 @@ binds {
 overview {
     zoom 0.25
 }
+spawn-at-startup "awww-daemon"
 

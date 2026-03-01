@@ -183,6 +183,7 @@ require("lazy").setup({
 				pyrefly = {},
 				svelte = {},
 				gopls = {},
+				qmlls = {},
 				zls = {},
 				lua_ls = {
 					settings = {
@@ -418,6 +419,7 @@ require("lazy").setup({
 				nix = { "nixfmt" },
 				proto = { "buf" },
 				python = { "ruff_format", "ruff_organize_imports" },
+				qml = { "qmlformat" },
 				scss = { "prettier" },
 				sh = { "shfmt" },
 				svelte = { "prettier" },
@@ -446,6 +448,7 @@ require("lazy").setup({
 					"*.nix",
 					"*.proto",
 					"*.py",
+					"*.qml",
 					"*.sh",
 					"*.svelte",
 					"*.ts",

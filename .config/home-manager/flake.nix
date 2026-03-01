@@ -7,10 +7,16 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    awww.url = "git+https://codeberg.org/LGFae/awww";
   };
 
   outputs =
-    { nixpkgs, home-manager, ... }:
+    {
+      nixpkgs,
+      home-manager,
+      awww,
+      ...
+    }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -18,8 +24,10 @@
     {
       homeConfigurations."dismint" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-
         modules = [ ./home.nix ];
+        extraSpecialArgs = {
+          inherit awww;
+        };
       };
     };
 }
