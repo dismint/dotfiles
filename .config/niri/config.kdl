@@ -7,25 +7,26 @@ input {
 }
 output "DP-1" {
     mode "2560x1440@119.998"
-    position x=1440 y=1080
+    position x=1440 y=750
     focus-at-startup
- // backdrop-color "#FF00FF"
 }
 output "DP-2" {
     mode "1920x1080@60.000"
-    position x=1440 y=0
+    position x=4000 y=500
+    transform "270"
+    layout {
+        default-column-width {
+            proportion 1.0
+        }
+    }
 }
 output "HDMI-A-1" {
-    mode "1920x1080@60.000"
-    position x=3360 y=0
-}
-output "DP-3" {
     mode "2560x1440@59.951"
     position x=0 y=0
     transform "90"
 }
 layout {
-    gaps 20
+    gaps 10
     always-center-single-column
     preset-column-widths {
         proportion 0.33333
@@ -39,10 +40,10 @@ layout {
         off
     }
     border {
-        width 10
-        active-color "#ffc87f"
-        inactive-color "#505050"
-        urgent-color "#9b0000"
+        width 4
+        active-color "#b4d48c"
+        inactive-color "#827e79"
+        urgent-color "#c1857c"
     }
     struts {
         left 0
@@ -169,6 +170,12 @@ binds {
     Mod+Shift+P {
         power-off-monitors
     }
+    Mod+Alt+1 {
+        spawn "sh" "-c" "$HOME/scripts/set-wallpapers"
+    }
+}
+debug {
+    honor-xdg-activation-with-invalid-serial
 }
 overview {
     zoom 0.25

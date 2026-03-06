@@ -1,0 +1,5 @@
+module bar
+singleton Colors 1.0 Colors.qml
+LayoutPreview 1.0 LayoutPreview.qml
+WorkspaceIndicator 1.0 WorkspaceIndicator.qml
+Time 1.0 Time.qml

@@ -2,6 +2,7 @@
   config,
   pkgs,
   awww,
+  qml-niri,
   ...
 }:
 
@@ -27,6 +28,7 @@
     btop
     buf
     bun
+    claude-code
     discord
     eza
     ffmpeg
@@ -53,7 +55,6 @@
     pyrefly
     python314
     qt6.qtdeclarative
-    quickshell
     ripgrep
     ruff
     shfmt
@@ -75,6 +76,8 @@
     zoxide
 
     awww.packages.${pkgs.stdenv.hostPlatform.system}.awww
+    qml-niri.packages.${pkgs.stdenv.hostPlatform.system}.default
+    qml-niri.packages.${pkgs.stdenv.hostPlatform.system}.quickshell
   ];
 
   programs.home-manager.enable = true;

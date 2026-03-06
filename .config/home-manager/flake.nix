@@ -8,6 +8,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     awww.url = "git+https://codeberg.org/LGFae/awww";
+    quickshell = {
+      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    qml-niri = {
+      url = "github:imiric/qml-niri/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.quickshell.follows = "quickshell";
+    };
   };
 
   outputs =
@@ -15,6 +25,7 @@
       nixpkgs,
       home-manager,
       awww,
+      qml-niri,
       ...
     }:
     let
@@ -26,7 +37,7 @@
         inherit pkgs;
         modules = [ ./home.nix ];
         extraSpecialArgs = {
-          inherit awww;
+          inherit awww qml-niri;
         };
       };
     };

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+awww img "$HOME/imgs/snowday-1440p.webp" --outputs DP-1 &
+awww img "$HOME/imgs/lilypad-1080p-vertical.webp" --outputs DP-2 &
+awww img "$HOME/imgs/lilypad-1440p-vertical.webp" --outputs HDMI-A-1
