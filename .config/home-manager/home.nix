@@ -41,6 +41,7 @@
     go
     google-chrome
     gopls
+    grim
     kdlfmt
     libx11
     litecli
