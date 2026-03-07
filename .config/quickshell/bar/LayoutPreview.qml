@@ -12,61 +12,53 @@ Item {
     required property int focusedWindowId
     required property bool skipAnimation
 
-    // Compute total bounds from model
     property real totalWidth: {
-        var maxRight = 100;
+        var max = 100;
         for (var i = 0; i < windowsModel.count; i++) {
             var w = windowsModel.get(i);
-            var right = w.pixelX + w.pixelW;
-            if (right > maxRight)
-                maxRight = right;
+            max = Math.max(max, w.pixelX + w.pixelW);
         }
-        return maxRight;
+        return max;
     }
 
     property real totalHeight: {
-        var maxBottom = 100;
+        var max = 100;
         for (var i = 0; i < windowsModel.count; i++) {
             var w = windowsModel.get(i);
-            var bottom = w.pixelY + w.pixelH;
-            if (bottom > maxBottom)
-                maxBottom = bottom;
+            max = Math.max(max, w.pixelY + w.pixelH);
         }
-        return maxBottom;
+        return max;
     }
 
-    property real targetScaleFactor: Math.min(width / totalWidth, height / totalHeight)
-    property real scaleFactor: targetScaleFactor
-
-    Behavior on scaleFactor {
+    property real targetScale: Math.min(width / totalWidth, height / totalHeight)
+    property real scale: targetScale
+    Behavior on scale {
         enabled: !root.skipAnimation
-        NumberAnimation { duration: 150; easing.type: Easing.OutCubic }
+        NumberAnimation {
+            duration: 150
+            easing.type: Easing.OutCubic
+        }
     }
 
     Item {
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
-        width: root.totalWidth * root.scaleFactor
-        height: root.totalHeight * root.scaleFactor
+        width: root.totalWidth * root.scale
+        height: root.totalHeight * root.scale
 
         Repeater {
             model: root.windowsModel
 
             delegate: Rectangle {
                 id: rect
-                required property int index
                 required property int windowId
                 required property string appId
-                required property string title
                 required property bool isFocused
                 required property real pixelX
                 required property real pixelY
                 required property real pixelW
                 required property real pixelH
 
-                property bool isFocusedWindow: windowId === root.focusedWindowId
-
-                // Animate pixel positions
                 property real animX: pixelX
                 property real animY: pixelY
                 property real animW: pixelW
@@ -101,12 +93,18 @@ Item {
                     }
                 }
 
-                x: animX * root.scaleFactor + 1
-                y: animY * root.scaleFactor + 1
-                width: Math.max(animW * root.scaleFactor - 2, 3)
-                height: Math.max(animH * root.scaleFactor - 2, 3)
+                x: animX * root.scale + 1
+                y: animY * root.scale + 1
+                width: Math.max(animW * root.scale - 2, 3)
+                height: Math.max(animH * root.scale - 2, 3)
                 radius: 2
-                color: isFocusedWindow ? Colors.primary : Qt.lighter(Colors.background, 2.5)
+                color: windowId === root.focusedWindowId ? Colors.primary : Qt.lighter(Colors.background, 2.5)
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: 150
+                    }
+                }
 
                 Image {
                     anchors.centerIn: parent
@@ -115,13 +113,6 @@ Item {
                     source: Quickshell.iconPath(rect.appId, true)
                     visible: source !== ""
                     fillMode: Image.PreserveAspectFit
-                }
-
-                Behavior on color {
-                    ColorAnimation {
-                        duration: 150
-                        easing.type: Easing.Linear
-                    }
                 }
             }
         }
