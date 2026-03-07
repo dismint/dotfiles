@@ -108,7 +108,7 @@ Item {
 
                 Image {
                     anchors.centerIn: parent
-                    width: Math.min(parent.width, parent.height) - 4
+                    width: Math.min(parent.width, parent.height, 30) - 2
                     height: width
                     source: Quickshell.iconPath(rect.appId, true)
                     visible: source !== ""
