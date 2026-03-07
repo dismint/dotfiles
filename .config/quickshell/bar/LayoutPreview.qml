@@ -1,161 +1,122 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Quickshell
 
 Item {
     id: root
-    width: 100
-    height: 24
+    width: 200
+    height: 44
 
     required property var windowsModel
     required property int focusedWindowId
     required property bool skipAnimation
 
-    property var columnData: computeColumnData()
-
-    function computeColumnData() {
-        var cols = {};
+    // Compute total bounds from model
+    property real totalWidth: {
+        var maxRight = 100;
         for (var i = 0; i < windowsModel.count; i++) {
             var w = windowsModel.get(i);
-            var col = w.posX;
-            var tile = w.posY;
-            var tileWidth = w.tileSizeX;
-            var tileHeight = w.tileSizeY;
-            if (!cols[col]) {
-                cols[col] = {
-                    width: 0,
-                    tiles: {}
-                };
-            }
-            if (tileWidth > cols[col].width) {
-                cols[col].width = tileWidth;
-            }
-            cols[col].tiles[tile] = tileHeight;
+            var right = w.pixelX + w.pixelW;
+            if (right > maxRight)
+                maxRight = right;
         }
-        return cols;
+        return maxRight;
     }
 
-    Connections {
-        target: root.windowsModel
-        function onCountChanged() {
-            root.columnData = root.computeColumnData();
+    property real totalHeight: {
+        var maxBottom = 100;
+        for (var i = 0; i < windowsModel.count; i++) {
+            var w = windowsModel.get(i);
+            var bottom = w.pixelY + w.pixelH;
+            if (bottom > maxBottom)
+                maxBottom = bottom;
         }
-        function onDataChanged() {
-            root.columnData = root.computeColumnData();
-        }
+        return maxBottom;
     }
 
-    property real totalWidth: {
-        var total = 0;
-        for (var col in columnData) {
-            total += columnData[col].width;
-        }
-        return Math.max(total, 100);
-    }
+    property real targetScaleFactor: Math.min(width / totalWidth, height / totalHeight)
+    property real scaleFactor: targetScaleFactor
 
-    property real maxColumnHeight: {
-        var maxH = 0;
-        for (var col in columnData) {
-            var colHeight = 0;
-            for (var tile in columnData[col].tiles) {
-                colHeight += columnData[col].tiles[tile];
-            }
-            if (colHeight > maxH) {
-                maxH = colHeight;
-            }
-        }
-        return Math.max(maxH, 100);
-    }
-
-    property real scaleFactor: Math.min(width / totalWidth, height / maxColumnHeight)
-
-    function getColumnX(targetCol) {
-        var x = 0;
-        var sortedCols = Object.keys(columnData).map(Number).sort(function (a, b) {
-            return a - b;
-        });
-        for (var i = 0; i < sortedCols.length; i++) {
-            if (sortedCols[i] < targetCol) {
-                x += columnData[sortedCols[i]].width * scaleFactor;
-            }
-        }
-        return x;
-    }
-
-    function getTileY(col, targetTile) {
-        var y = 0;
-        if (!columnData[col])
-            return 0;
-        var sortedTiles = Object.keys(columnData[col].tiles).map(Number).sort(function (a, b) {
-            return a - b;
-        });
-        for (var i = 0; i < sortedTiles.length; i++) {
-            if (sortedTiles[i] < targetTile) {
-                y += columnData[col].tiles[sortedTiles[i]] * scaleFactor;
-            }
-        }
-        return y;
+    Behavior on scaleFactor {
+        enabled: !root.skipAnimation
+        NumberAnimation { duration: 150; easing.type: Easing.OutCubic }
     }
 
     Item {
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
         width: root.totalWidth * root.scaleFactor
-        height: root.maxColumnHeight * root.scaleFactor
+        height: root.totalHeight * root.scaleFactor
 
         Repeater {
             model: root.windowsModel
 
             delegate: Rectangle {
+                id: rect
                 required property int index
                 required property int windowId
+                required property string appId
                 required property string title
                 required property bool isFocused
-                required property int posX
-                required property int posY
-                required property real tileSizeX
-                required property real tileSizeY
+                required property real pixelX
+                required property real pixelY
+                required property real pixelW
+                required property real pixelH
 
                 property bool isFocusedWindow: windowId === root.focusedWindowId
 
-                property real targetX: root.getColumnX(posX) + 1
-                property real targetY: root.getTileY(posX, posY) + 1
-                property real targetWidth: Math.max(tileSizeX * root.scaleFactor - 2, 3)
-                property real targetHeight: Math.max(tileSizeY * root.scaleFactor - 2, 3)
+                // Animate pixel positions
+                property real animX: pixelX
+                property real animY: pixelY
+                property real animW: pixelW
+                property real animH: pixelH
 
-                x: targetX
-                y: targetY
-                width: targetWidth
-                height: targetHeight
+                Behavior on animX {
+                    enabled: !root.skipAnimation
+                    NumberAnimation {
+                        duration: 150
+                        easing.type: Easing.OutCubic
+                    }
+                }
+                Behavior on animY {
+                    enabled: !root.skipAnimation
+                    NumberAnimation {
+                        duration: 150
+                        easing.type: Easing.OutCubic
+                    }
+                }
+                Behavior on animW {
+                    enabled: !root.skipAnimation
+                    NumberAnimation {
+                        duration: 150
+                        easing.type: Easing.OutCubic
+                    }
+                }
+                Behavior on animH {
+                    enabled: !root.skipAnimation
+                    NumberAnimation {
+                        duration: 150
+                        easing.type: Easing.OutCubic
+                    }
+                }
+
+                x: animX * root.scaleFactor + 1
+                y: animY * root.scaleFactor + 1
+                width: Math.max(animW * root.scaleFactor - 2, 3)
+                height: Math.max(animH * root.scaleFactor - 2, 3)
                 radius: 2
                 color: isFocusedWindow ? Colors.primary : Qt.lighter(Colors.background, 2.5)
 
-                Behavior on x {
-                    NumberAnimation {
-                        duration: 150
-                        easing.type: Easing.OutCubic
-                    }
+                Image {
+                    anchors.centerIn: parent
+                    width: Math.min(parent.width, parent.height) - 4
+                    height: width
+                    source: Quickshell.iconPath(rect.appId, true)
+                    visible: source !== ""
+                    fillMode: Image.PreserveAspectFit
                 }
-                Behavior on y {
-                    NumberAnimation {
-                        duration: 150
-                        easing.type: Easing.OutCubic
-                    }
-                }
-                Behavior on width {
-                    enabled: !root.skipAnimation
-                    NumberAnimation {
-                        duration: 150
-                        easing.type: Easing.OutCubic
-                    }
-                }
-                Behavior on height {
-                    enabled: !root.skipAnimation
-                    NumberAnimation {
-                        duration: 150
-                        easing.type: Easing.OutCubic
-                    }
-                }
+
                 Behavior on color {
                     ColorAnimation {
                         duration: 150

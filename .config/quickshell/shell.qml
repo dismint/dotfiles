@@ -19,7 +19,7 @@ PanelWindow {
         left: 6
         top: 6
     }
-    implicitHeight: 40
+    implicitHeight: 60
     color: "transparent"
 
     Niri {
@@ -46,38 +46,65 @@ PanelWindow {
     function syncWindowsModel(incomingWindows, incomingWorkspaceId) {
         var workspaceChanged = (panel.lastWorkspaceId !== -1 && panel.lastWorkspaceId !== incomingWorkspaceId);
         panel.lastWorkspaceId = incomingWorkspaceId;
-        // skip width / height animation when:
-        // 1. opening the first window on a workspace
-        // 2. switching workspaces
         panel.skipAnimation = (windowsModel.count === 0 && incomingWindows.length > 0) || workspaceChanged;
+
+        // Build column structure to compute pixel positions
+        var columns = {};
+        for (var i = 0; i < incomingWindows.length; i++) {
+            var win = incomingWindows[i];
+            if (win.is_floating) continue;
+            var col = win.layout.pos_in_scrolling_layout[0];
+            var tile = win.layout.pos_in_scrolling_layout[1];
+            if (!columns[col]) {
+                columns[col] = { width: 0, tiles: {} };
+            }
+            if (win.layout.tile_size[0] > columns[col].width) {
+                columns[col].width = win.layout.tile_size[0];
+            }
+            columns[col].tiles[tile] = win.layout.tile_size[1];
+        }
+
+        // Compute pixel X for each column
+        var colPixelX = {};
+        var sortedCols = Object.keys(columns).map(Number).sort(function(a,b) { return a-b; });
+        var xAccum = 0;
+        for (var c = 0; c < sortedCols.length; c++) {
+            colPixelX[sortedCols[c]] = xAccum;
+            xAccum += columns[sortedCols[c]].width;
+        }
+
+        // Compute pixel Y for each tile in each column
+        var tilePixelY = {};
+        for (var col in columns) {
+            tilePixelY[col] = {};
+            var sortedTiles = Object.keys(columns[col].tiles).map(Number).sort(function(a,b) { return a-b; });
+            var yAccum = 0;
+            for (var t = 0; t < sortedTiles.length; t++) {
+                tilePixelY[col][sortedTiles[t]] = yAccum;
+                yAccum += columns[col].tiles[sortedTiles[t]];
+            }
+        }
 
         var incomingById = {};
         for (var i = 0; i < incomingWindows.length; i++) {
-            console.log(incomingWindows[i].keys());
             incomingById[incomingWindows[i].id] = incomingWindows[i];
         }
 
-        var existingById = {};
-        for (var i = 0; i < windowsModel.count; i++) {
-            existingById[windowsModel.get(i).windowId] = i;
-        }
-
         var windowsToRemove = [];
-        // goes backwards so when we remove it is stable
         for (var i = windowsModel.count - 1; i >= 0; i--) {
             var modelItem = windowsModel.get(i);
             var incoming = incomingById[modelItem.windowId];
-            if (incoming) {
+            if (incoming && !incoming.is_floating) {
+                var col = incoming.layout.pos_in_scrolling_layout[0];
+                var tile = incoming.layout.pos_in_scrolling_layout[1];
                 windowsModel.setProperty(i, "title", incoming.title);
                 windowsModel.setProperty(i, "isFocused", incoming.is_focused);
-                windowsModel.setProperty(i, "posX", incoming.layout.pos_in_scrolling_layout[0]);
-                windowsModel.setProperty(i, "posY", incoming.layout.pos_in_scrolling_layout[1]);
-                windowsModel.setProperty(i, "tileSizeX", incoming.layout.tile_size[0]);
-                windowsModel.setProperty(i, "tileSizeY", incoming.layout.tile_size[1]);
+                windowsModel.setProperty(i, "pixelX", colPixelX[col] || 0);
+                windowsModel.setProperty(i, "pixelY", tilePixelY[col] ? (tilePixelY[col][tile] || 0) : 0);
+                windowsModel.setProperty(i, "pixelW", incoming.layout.tile_size[0]);
+                windowsModel.setProperty(i, "pixelH", incoming.layout.tile_size[1]);
                 delete incomingById[modelItem.windowId];
-            }
-
-            if (!incoming || incoming.is_floating) {
+            } else {
                 windowsToRemove.push(i);
             }
         }
@@ -87,19 +114,18 @@ PanelWindow {
 
         for (var id in incomingById) {
             var win = incomingById[id];
-
-            if (win.is_floating) {
-                continue;
-            }
-
+            if (win.is_floating) continue;
+            var col = win.layout.pos_in_scrolling_layout[0];
+            var tile = win.layout.pos_in_scrolling_layout[1];
             windowsModel.append({
                 windowId: win.id,
+                appId: win.app_id,
                 title: win.title,
                 isFocused: win.is_focused,
-                posX: win.layout.pos_in_scrolling_layout[0],
-                posY: win.layout.pos_in_scrolling_layout[1],
-                tileSizeX: win.layout.tile_size[0],
-                tileSizeY: win.layout.tile_size[1]
+                pixelX: colPixelX[col] || 0,
+                pixelY: tilePixelY[col] ? (tilePixelY[col][tile] || 0) : 0,
+                pixelW: win.layout.tile_size[0],
+                pixelH: win.layout.tile_size[1]
             });
         }
 
