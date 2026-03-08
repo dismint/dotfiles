@@ -7,7 +7,6 @@ Item {
     id: root
 
     required property var niri
-    required property Item targetParent
     required property string outputFilter
 
     signal workspaceFocused
@@ -18,6 +17,18 @@ Item {
         anchors.centerIn: parent
         spacing: 16
 
+        onWidthChanged: {
+            if (!indicator.initialized) {
+                for (var i = 0; i < workspacesRepeater.count; i++) {
+                    var item = workspacesRepeater.itemAt(i);
+                    if (item && item.visible && item.isFocused) {
+                        root.animateToWorkspace(item);
+                        return;
+                    }
+                }
+            }
+        }
+
         Repeater {
             id: workspacesRepeater
             model: root.niri.workspaces
@@ -27,7 +38,6 @@ Item {
                 required property int index
                 required property int id
                 required property bool isFocused
-                required property bool isActive
                 required property string output
 
                 visible: output === root.outputFilter
@@ -46,8 +56,8 @@ Item {
                     width: 12
                     height: 12
                     radius: 6
-                    color: workspaceItem.isActive ? Colors.primary : Qt.lighter(Colors.background, 2.0)
-                    opacity: workspaceItem.isActive ? 1.0 : 0.6
+                    color: Qt.lighter(Colors.background, 1.8)
+                    opacity: 0.8
 
                     MouseArea {
                         anchors.fill: parent
@@ -59,23 +69,21 @@ Item {
         }
     }
 
-    // The stretchy focus indicator
+    // The stretchy focus indicator (same size as dots, stretches between them)
     Rectangle {
         id: indicator
-        parent: root.targetParent
         z: 10
-        height: 6
-        radius: 3
-        color: Colors.accent
-        visible: initialized  // Hide until positioned
+        height: 12
+        radius: 6
+        color: Colors.primary
+        visible: initialized
+        anchors.verticalCenter: workspacesRow.verticalCenter
 
         property bool initialized: false
         property real centerX: 0
-        property real centerY: 0
-        property real stretchWidth: 6  // 6 = circle, larger = stretched oval
+        property real stretchWidth: 12  // 12 = circle (same as dots), larger = stretched oval
 
         x: centerX - stretchWidth / 2
-        y: centerY - height / 2
         width: stretchWidth
     }
 
@@ -85,14 +93,13 @@ Item {
 
         property real fromX: 0
         property real toX: 0
-        property real posY: 0
 
         // Phase 1: Stretch toward target
         ParallelAnimation {
             NumberAnimation {
                 target: indicator
                 property: "stretchWidth"
-                to: Math.abs(stretchAnim.toX - stretchAnim.fromX) + 6
+                to: Math.abs(stretchAnim.toX - stretchAnim.fromX) + 12
                 duration: 120
                 easing.type: Easing.OutQuad
             }
@@ -110,7 +117,7 @@ Item {
             NumberAnimation {
                 target: indicator
                 property: "stretchWidth"
-                to: 6
+                to: 12
                 duration: 120
                 easing.type: Easing.InOutQuad
             }
@@ -125,26 +132,26 @@ Item {
     }
 
     function animateToWorkspace(item) {
-        var globalPos = item.mapToItem(root.targetParent, item.width / 2, item.height / 2);
-        var distance = Math.abs(globalPos.x - indicator.centerX);
+        // Calculate center X: Row's position + item's position within Row + half item width
+        var centerX = workspacesRow.x + item.x + item.width / 2;
 
-        // Skip animation if not initialized yet
+        // Skip if layout not ready
+        if (workspacesRow.width <= 0) return;
+
+        // First initialization - no animation
         if (!indicator.initialized) {
-            indicator.centerX = globalPos.x;
-            indicator.centerY = globalPos.y;
+            indicator.centerX = centerX;
             indicator.initialized = true;
             return;
         }
 
+        var distance = Math.abs(centerX - indicator.centerX);
         if (distance > 5) {
             stretchAnim.fromX = indicator.centerX;
-            stretchAnim.toX = globalPos.x;
-            stretchAnim.posY = globalPos.y;
-            indicator.centerY = globalPos.y;
+            stretchAnim.toX = centerX;
             stretchAnim.restart();
         } else {
-            indicator.centerX = globalPos.x;
-            indicator.centerY = globalPos.y;
+            indicator.centerX = centerX;
         }
     }
 
@@ -158,18 +165,6 @@ Item {
     }
 
     Component.onCompleted: {
-        // Initialize position to first focused workspace
-        Qt.callLater(() => {
-            for (var i = 0; i < workspacesRepeater.count; i++) {
-                var item = workspacesRepeater.itemAt(i);
-                if (item && item.visible && item.isFocused) {
-                    var pos = item.mapToItem(root.targetParent, item.width / 2, item.height / 2);
-                    indicator.centerX = pos.x;
-                    indicator.centerY = pos.y;
-                    indicator.initialized = true;
-                    return;
-                }
-            }
-        });
+        // Initial positioning handled by onIsFocusedChanged
     }
 }

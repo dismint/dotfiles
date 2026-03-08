@@ -181,7 +181,6 @@ PanelWindow {
         width: 200
         height: parent.height
         niri: niri
-        targetParent: barBackground
         outputFilter: "DP-1"
         onWorkspaceFocused: {
             if (!windowsProcess.running)
