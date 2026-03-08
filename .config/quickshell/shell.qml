@@ -19,7 +19,7 @@ PanelWindow {
         left: 6
         top: 6
     }
-    implicitHeight: 60
+    implicitHeight: 44
     color: "transparent"
 
     Niri {
@@ -168,7 +168,7 @@ PanelWindow {
 
     Bar.LayoutPreview {
         anchors.left: parent.left
-        anchors.leftMargin: 8
+        anchors.leftMargin: 4
         anchors.verticalCenter: parent.verticalCenter
         windowsModel: windowsModel
         focusedWindowId: panel.focusedWindowId

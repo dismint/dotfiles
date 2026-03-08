@@ -6,7 +6,7 @@ import Quickshell
 Item {
     id: root
     width: 200
-    height: 44
+    height: 36
 
     required property var windowsModel
     required property int focusedWindowId

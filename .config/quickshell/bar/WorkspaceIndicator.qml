@@ -3,8 +3,6 @@ pragma ComponentBehavior: Bound
 import Niri 0.1
 import QtQuick
 
-import "." as Bar
-
 Item {
     id: root
 
@@ -14,11 +12,11 @@ Item {
 
     signal workspaceFocused
 
+    // Workspace dots
     Row {
         id: workspacesRow
         anchors.centerIn: parent
         spacing: 16
-        onWidthChanged: Qt.callLater(root.updateFocusIndicator)
 
         Repeater {
             id: workspacesRepeater
@@ -28,24 +26,22 @@ Item {
                 id: workspaceItem
                 required property int index
                 required property int id
-                required property string name
-                required property string output
                 required property bool isFocused
                 required property bool isActive
+                required property string output
 
-                visible: workspaceItem.output === root.outputFilter
+                visible: output === root.outputFilter
                 width: visible ? 12 : 0
                 height: 12
 
                 onIsFocusedChanged: {
                     if (isFocused) {
-                        Qt.callLater(root.updateFocusIndicator);
+                        root.animateToWorkspace(this);
                         root.workspaceFocused();
                     }
                 }
 
                 Rectangle {
-                    id: outerDot
                     anchors.centerIn: parent
                     width: 12
                     height: 12
@@ -63,181 +59,92 @@ Item {
         }
     }
 
+    // The stretchy focus indicator
     Rectangle {
-        id: focusIndicator
-        width: 6
-        height: 6
-        radius: 3
-        color: "blue"
-        visible: true
+        id: indicator
         parent: root.targetParent
         z: 10
-
-        property real targetX: 0
-        property real targetY: 0
-
-        x: targetX - width / 2
-        y: targetY - height / 2
-
-        Behavior on x {
-            NumberAnimation {
-                duration: 250
-                easing.type: Easing.OutCubic
-            }
-        }
-    }
-
-    Rectangle {
-        id: smearTrail
-        parent: root.targetParent
-        z: 5
         height: 6
         radius: 3
         color: Colors.accent
-        opacity: 0.5
-        visible: smearAnimation.running
+        visible: initialized  // Hide until positioned
 
-        property real startX: 0
-        property real endX: 0
+        property bool initialized: false
+        property real centerX: 0
         property real centerY: 0
+        property real stretchWidth: 6  // 6 = circle, larger = stretched oval
 
-        x: Math.min(startX, endX)
+        x: centerX - stretchWidth / 2
         y: centerY - height / 2
-        width: Math.abs(endX - startX) + 6
-
-        Behavior on width {
-            NumberAnimation {
-                duration: 200
-                easing.type: Easing.OutQuad
-            }
-        }
-
-        Behavior on opacity {
-            NumberAnimation {
-                duration: 150
-            }
-        }
+        width: stretchWidth
     }
 
-    Rectangle {
-        id: ghostTrail1
-        parent: root.targetParent
-        z: 4
-        width: 6
-        height: 6
-        radius: 3
-        color: Colors.accent
-        opacity: 0
-        visible: true
-
-        property real targetX: 0
-        property real targetY: 0
-
-        x: targetX - width / 2
-        y: targetY - height / 2
-
-        Behavior on x {
-            NumberAnimation {
-                duration: 320
-                easing.type: Easing.OutCubic
-            }
-        }
-    }
-
-    Rectangle {
-        id: ghostTrail2
-        parent: root.targetParent
-        z: 3
-        width: 6
-        height: 6
-        radius: 3
-        color: Colors.accent
-        opacity: 0
-        visible: true
-
-        property real targetX: 0
-        property real targetY: 0
-
-        x: targetX - width / 2
-        y: targetY - height / 2
-
-        Behavior on x {
-            NumberAnimation {
-                duration: 380
-                easing.type: Easing.OutCubic
-            }
-        }
-    }
-
+    // Animation for the stretch effect
     SequentialAnimation {
-        id: smearAnimation
+        id: stretchAnim
 
+        property real fromX: 0
+        property real toX: 0
+        property real posY: 0
+
+        // Phase 1: Stretch toward target
         ParallelAnimation {
             NumberAnimation {
-                target: smearTrail
-                property: "opacity"
-                from: 0.6
-                to: 0.3
-                duration: 200
+                target: indicator
+                property: "stretchWidth"
+                to: Math.abs(stretchAnim.toX - stretchAnim.fromX) + 6
+                duration: 120
                 easing.type: Easing.OutQuad
             }
             NumberAnimation {
-                target: ghostTrail1
-                property: "opacity"
-                from: 0.4
-                to: 0
-                duration: 300
-                easing.type: Easing.OutQuad
-            }
-            NumberAnimation {
-                target: ghostTrail2
-                property: "opacity"
-                from: 0.25
-                to: 0
-                duration: 350
+                target: indicator
+                property: "centerX"
+                to: (stretchAnim.fromX + stretchAnim.toX) / 2
+                duration: 120
                 easing.type: Easing.OutQuad
             }
         }
 
-        NumberAnimation {
-            target: smearTrail
-            property: "opacity"
-            to: 0
-            duration: 100
+        // Phase 2: Shrink to target
+        ParallelAnimation {
+            NumberAnimation {
+                target: indicator
+                property: "stretchWidth"
+                to: 6
+                duration: 120
+                easing.type: Easing.InOutQuad
+            }
+            NumberAnimation {
+                target: indicator
+                property: "centerX"
+                to: stretchAnim.toX
+                duration: 120
+                easing.type: Easing.InOutQuad
+            }
         }
     }
 
-    function updateFocusIndicator() {
-        for (var i = 0; i < workspacesRepeater.count; i++) {
-            var item = workspacesRepeater.itemAt(i);
-            if (item && item.visible && item.isFocused) {
-                var globalPos = item.mapToItem(root.targetParent, item.width / 2, item.height / 2);
-                var prevX = focusIndicator.targetX;
-                var distance = Math.abs(globalPos.x - prevX);
+    function animateToWorkspace(item) {
+        var globalPos = item.mapToItem(root.targetParent, item.width / 2, item.height / 2);
+        var distance = Math.abs(globalPos.x - indicator.centerX);
 
-                if (distance > 5) {
-                    smearTrail.startX = prevX;
-                    smearTrail.endX = globalPos.x;
-                    smearTrail.centerY = globalPos.y;
+        // Skip animation if not initialized yet
+        if (!indicator.initialized) {
+            indicator.centerX = globalPos.x;
+            indicator.centerY = globalPos.y;
+            indicator.initialized = true;
+            return;
+        }
 
-                    ghostTrail1.targetX = prevX;
-                    ghostTrail1.targetY = globalPos.y;
-                    ghostTrail2.targetX = prevX;
-                    ghostTrail2.targetY = globalPos.y;
-
-                    Qt.callLater(function () {
-                        ghostTrail1.targetX = globalPos.x;
-                        ghostTrail2.targetX = globalPos.x;
-                    });
-
-                    smearAnimation.restart();
-                }
-
-                focusIndicator.targetX = globalPos.x;
-                focusIndicator.targetY = globalPos.y;
-                focusIndicator.visible = true;
-                return;
-            }
+        if (distance > 5) {
+            stretchAnim.fromX = indicator.centerX;
+            stretchAnim.toX = globalPos.x;
+            stretchAnim.posY = globalPos.y;
+            indicator.centerY = globalPos.y;
+            stretchAnim.restart();
+        } else {
+            indicator.centerX = globalPos.x;
+            indicator.centerY = globalPos.y;
         }
     }
 
@@ -251,6 +158,18 @@ Item {
     }
 
     Component.onCompleted: {
-        Qt.callLater(updateFocusIndicator);
+        // Initialize position to first focused workspace
+        Qt.callLater(() => {
+            for (var i = 0; i < workspacesRepeater.count; i++) {
+                var item = workspacesRepeater.itemAt(i);
+                if (item && item.visible && item.isFocused) {
+                    var pos = item.mapToItem(root.targetParent, item.width / 2, item.height / 2);
+                    indicator.centerX = pos.x;
+                    indicator.centerY = pos.y;
+                    indicator.initialized = true;
+                    return;
+                }
+            }
+        });
     }
 }
