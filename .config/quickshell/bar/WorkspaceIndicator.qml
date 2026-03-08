@@ -9,45 +9,42 @@ Item {
     required property var niri
     required property string outputFilter
 
-    signal workspaceFocused
-
-    // Workspace dots
     Row {
-        id: workspacesRow
+        id: row
         anchors.centerIn: parent
         spacing: 16
 
         onWidthChanged: {
-            if (!indicator.initialized) {
-                for (var i = 0; i < workspacesRepeater.count; i++) {
-                    var item = workspacesRepeater.itemAt(i);
-                    if (item && item.visible && item.isFocused) {
-                        root.animateToWorkspace(item);
-                        return;
-                    }
+            // Recalculate indicator position when layout changes (workspaces added/removed)
+            for (var i = 0; i < repeater.count; i++) {
+                var item = repeater.itemAt(i);
+                if (item?.visible && item.isFocused) {
+                    root.goTo(item, !indicator.initialized);
+                    return;
                 }
             }
         }
 
         Repeater {
-            id: workspacesRepeater
+            id: repeater
             model: root.niri.workspaces
 
             delegate: Item {
-                id: workspaceItem
-                required property int index
+                id: workspace
                 required property int id
                 required property bool isFocused
                 required property string output
+
+                Component.onCompleted: console.log("Workspace created:", id, "output:", output, "focused:", isFocused)
 
                 visible: output === root.outputFilter
                 width: visible ? 12 : 0
                 height: 12
 
                 onIsFocusedChanged: {
-                    if (isFocused) {
-                        root.animateToWorkspace(this);
-                        root.workspaceFocused();
+                    console.log("Workspace", id, "focus changed to:", isFocused);
+                    if (isFocused && visible && width > 0) {
+                        root.goTo(this, false);
                     }
                 }
 
@@ -62,14 +59,13 @@ Item {
                     MouseArea {
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
-                        onClicked: root.niri.focusWorkspaceById(workspaceItem.id)
+                        onClicked: root.niri.focusWorkspaceById(workspace.id)
                     }
                 }
             }
         }
     }
 
-    // The stretchy focus indicator (same size as dots, stretches between them)
     Rectangle {
         id: indicator
         z: 10
@@ -77,42 +73,37 @@ Item {
         radius: 6
         color: Colors.primary
         visible: initialized
-        anchors.verticalCenter: workspacesRow.verticalCenter
+        anchors.verticalCenter: row.verticalCenter
 
         property bool initialized: false
         property real centerX: 0
-        property real stretchWidth: 12  // 12 = circle (same as dots), larger = stretched oval
+        property real stretchWidth: 12
 
         x: centerX - stretchWidth / 2
         width: stretchWidth
     }
 
-    // Animation for the stretch effect
     SequentialAnimation {
-        id: stretchAnim
-
+        id: stretchAnimation
         property real fromX: 0
         property real toX: 0
 
-        // Phase 1: Stretch toward target
         ParallelAnimation {
             NumberAnimation {
                 target: indicator
                 property: "stretchWidth"
-                to: Math.abs(stretchAnim.toX - stretchAnim.fromX) + 12
+                to: Math.abs(stretchAnimation.toX - stretchAnimation.fromX) + 12
                 duration: 120
                 easing.type: Easing.OutQuad
             }
             NumberAnimation {
                 target: indicator
                 property: "centerX"
-                to: (stretchAnim.fromX + stretchAnim.toX) / 2
+                to: (stretchAnimation.fromX + stretchAnimation.toX) / 2
                 duration: 120
                 easing.type: Easing.OutQuad
             }
         }
-
-        // Phase 2: Shrink to target
         ParallelAnimation {
             NumberAnimation {
                 target: indicator
@@ -124,47 +115,45 @@ Item {
             NumberAnimation {
                 target: indicator
                 property: "centerX"
-                to: stretchAnim.toX
+                to: stretchAnimation.toX
                 duration: 120
                 easing.type: Easing.InOutQuad
             }
         }
     }
 
-    function animateToWorkspace(item) {
-        // Calculate center X: Row's position + item's position within Row + half item width
-        var centerX = workspacesRow.x + item.x + item.width / 2;
+    function goTo(item, skipAnimation) {
+        var targetX = row.x + item.x + item.width / 2;
+        if (row.width <= 0)
+            return;
 
-        // Skip if layout not ready
-        if (workspacesRow.width <= 0) return;
-
-        // First initialization - no animation
         if (!indicator.initialized) {
-            indicator.centerX = centerX;
+            indicator.centerX = targetX;
             indicator.initialized = true;
             return;
         }
 
-        var distance = Math.abs(centerX - indicator.centerX);
-        if (distance > 5) {
-            stretchAnim.fromX = indicator.centerX;
-            stretchAnim.toX = centerX;
-            stretchAnim.restart();
+        // Skip animation if requested (e.g., when layout changes due to new workspace)
+        if (skipAnimation) {
+            indicator.centerX = targetX;
+            return;
+        }
+
+        if (Math.abs(targetX - indicator.centerX) > 5) {
+            stretchAnimation.fromX = indicator.centerX;
+            stretchAnimation.toX = targetX;
+            stretchAnimation.restart();
         } else {
-            indicator.centerX = centerX;
+            indicator.centerX = targetX;
         }
     }
 
     function getFocusedWorkspaceId() {
-        for (var i = 0; i < workspacesRepeater.count; i++) {
-            var workspace = workspacesRepeater.itemAt(i);
-            if (workspace && workspace.isFocused)
+        for (var i = 0; i < repeater.count; i++) {
+            var workspace = repeater.itemAt(i);
+            if (workspace?.isFocused)
                 return workspace.id;
         }
         return -1;
-    }
-
-    Component.onCompleted: {
-        // Initial positioning handled by onIsFocusedChanged
     }
 }

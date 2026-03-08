@@ -182,10 +182,6 @@ PanelWindow {
         height: parent.height
         niri: niri
         outputFilter: "DP-1"
-        onWorkspaceFocused: {
-            if (!windowsProcess.running)
-                windowsProcess.running = true;
-        }
     }
 
     Bar.Time {
