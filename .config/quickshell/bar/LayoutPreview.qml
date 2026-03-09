@@ -107,10 +107,9 @@ Item {
                 }
 
                 Image {
-                    anchors.centerIn: parent
-                    width: Math.min(parent.width, parent.height, 26) - 2
-                    height: width
-                    source: Quickshell.iconPath(rect.appId, true)
+                    anchors.fill: parent
+                    anchors.margins: parent.width + parent.height < 60 ? 1 : 4
+                    source: Quickshell.iconPath(IconResolver.resolve(rect.appId), true)
                     visible: source !== ""
                     fillMode: Image.PreserveAspectFit
                 }

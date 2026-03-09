@@ -76,6 +76,8 @@
     zls
     zoxide
 
+    mgba
+
     awww.packages.${pkgs.stdenv.hostPlatform.system}.awww
     qml-niri.packages.${pkgs.stdenv.hostPlatform.system}.default
     qml-niri.packages.${pkgs.stdenv.hostPlatform.system}.quickshell

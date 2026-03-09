@@ -35,16 +35,16 @@ Item {
                 required property bool isFocused
                 required property string output
 
-                Component.onCompleted: console.log("Workspace created:", id, "output:", output, "focused:", isFocused)
-
                 visible: output === root.outputFilter
                 width: visible ? 12 : 0
                 height: 12
 
                 onIsFocusedChanged: {
-                    console.log("Workspace", id, "focus changed to:", isFocused);
-                    if (isFocused && visible && width > 0) {
-                        root.goTo(this, false);
+                    if (isFocused) {
+                        Qt.callLater(() => {
+                            if (visible && width > 0)
+                                root.goTo(this, false);
+                        });
                     }
                 }
 

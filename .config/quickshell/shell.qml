@@ -85,7 +85,10 @@ PanelWindow {
     }
 
     function syncWindowsModel(windows, workspaceId) {
-        skipAnimation = (windowsModel.count === 0 && windows.length > 0);
+        var workspaceChanged = lastWorkspaceId !== -1 && workspaceId !== lastWorkspaceId;
+        var firstLoad = windowsModel.count === 0 && windows.length > 0;
+        skipAnimation = firstLoad || workspaceChanged;
+        lastWorkspaceId = workspaceId;
 
         var positions = computePixelPositions(windows);
         var incomingById = {};
