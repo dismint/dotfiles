@@ -2,7 +2,8 @@
   description = "Home Manager configuration of dismint.";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.11";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -23,6 +24,7 @@
   outputs =
     {
       nixpkgs,
+      nixpkgs-stable,
       home-manager,
       awww,
       qml-niri,
@@ -31,13 +33,14 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+      pkgs-stable = nixpkgs-stable.legacyPackages.${system};
     in
     {
       homeConfigurations."dismint" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [ ./home.nix ];
         extraSpecialArgs = {
-          inherit awww qml-niri;
+          inherit pkgs-stable awww qml-niri;
         };
       };
     };

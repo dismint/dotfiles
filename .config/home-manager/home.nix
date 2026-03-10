@@ -1,12 +1,14 @@
 {
   config,
   pkgs,
+  pkgs-stable,
   awww,
   qml-niri,
   ...
 }:
 
 {
+
   nixpkgs = {
     config = {
       allowUnfree = true;
@@ -29,7 +31,7 @@
     buf
     bun
     claude-code
-    discord
+    vesktop
     eza
     ffmpeg
     fish
@@ -68,15 +70,12 @@
     typescript-language-server
     unzip
     uv
-    vesktop
     vue-language-server
     yazi
     zig
     zk
     zls
     zoxide
-
-    mgba
 
     awww.packages.${pkgs.stdenv.hostPlatform.system}.awww
     qml-niri.packages.${pkgs.stdenv.hostPlatform.system}.default

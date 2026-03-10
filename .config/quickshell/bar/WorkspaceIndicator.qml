@@ -1,6 +1,5 @@
 pragma ComponentBehavior: Bound
 
-import Niri 0.1
 import QtQuick
 
 Item {
@@ -9,13 +8,14 @@ Item {
     required property var niri
     required property string outputFilter
 
+    property int dotDiameter: 20
+
     Row {
         id: row
         anchors.centerIn: parent
         spacing: 16
 
         onWidthChanged: {
-            // Recalculate indicator position when layout changes (workspaces added/removed)
             for (var i = 0; i < repeater.count; i++) {
                 var item = repeater.itemAt(i);
                 if (item?.visible && item.isFocused) {
@@ -36,8 +36,8 @@ Item {
                 required property string output
 
                 visible: output === root.outputFilter
-                width: visible ? 12 : 0
-                height: 12
+                width: visible ? root.dotDiameter : 0
+                height: root.dotDiameter
 
                 onIsFocusedChanged: {
                     if (isFocused) {
@@ -50,11 +50,10 @@ Item {
 
                 Rectangle {
                     anchors.centerIn: parent
-                    width: 12
-                    height: 12
-                    radius: 6
-                    color: Qt.lighter(Colors.background, 1.8)
-                    opacity: 0.8
+                    width: root.dotDiameter
+                    height: root.dotDiameter
+                    radius: root.dotDiameter / 2
+                    color: Qt.lighter(Colors.background, 2.0)
 
                     MouseArea {
                         anchors.fill: parent
@@ -69,7 +68,7 @@ Item {
     Rectangle {
         id: indicator
         z: 10
-        height: 12
+        height: root.dotDiameter * 0.33
         radius: 6
         color: Colors.primary
         visible: initialized
@@ -77,7 +76,7 @@ Item {
 
         property bool initialized: false
         property real centerX: 0
-        property real stretchWidth: 12
+        property real stretchWidth: root.dotDiameter * 0.33
 
         x: centerX - stretchWidth / 2
         width: stretchWidth
@@ -92,7 +91,7 @@ Item {
             NumberAnimation {
                 target: indicator
                 property: "stretchWidth"
-                to: Math.abs(stretchAnimation.toX - stretchAnimation.fromX) + 12
+                to: Math.abs(stretchAnimation.toX - stretchAnimation.fromX) + root.dotDiameter * 0.33
                 duration: 120
                 easing.type: Easing.OutQuad
             }
@@ -108,7 +107,7 @@ Item {
             NumberAnimation {
                 target: indicator
                 property: "stretchWidth"
-                to: 12
+                to: root.dotDiameter * 0.33
                 duration: 120
                 easing.type: Easing.InOutQuad
             }
@@ -133,7 +132,6 @@ Item {
             return;
         }
 
-        // Skip animation if requested (e.g., when layout changes due to new workspace)
         if (skipAnimation) {
             indicator.centerX = targetX;
             return;
