@@ -9,7 +9,7 @@ Item {
     required property string outputFilter
 
     property double dotDiameter: 25
-    property double innerDotDiameter: dotDiameter * 0.40
+    property double innerDotDiameter: dotDiameter * 0.60
 
     Row {
         id: row
@@ -54,7 +54,7 @@ Item {
                     width: root.dotDiameter
                     height: root.dotDiameter
                     radius: root.dotDiameter / 2
-                    color: Qt.lighter(Colors.background, 2.0)
+                    color: Qt.lighter(Colors.background, 3.0)
 
                     MouseArea {
                         anchors.fill: parent
