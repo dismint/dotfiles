@@ -6,7 +6,7 @@ import Quickshell
 Item {
     id: root
     width: 200
-    height: 36
+    height: 52
 
     required property var windowsModel
     required property int focusedWindowId
@@ -107,11 +107,22 @@ Item {
                 }
 
                 Image {
+                    property double smaller: Math.min(root.totalWidth * root.scale, root.totalHeight * root.scale)
+                    property double margins: smaller < 20 ? 2 : (smaller < 40 ? 4 : 8)
+
                     anchors.fill: parent
-                    anchors.margins: parent.width + parent.height < 60 ? 1 : 4
+                    anchors.margins: margins
                     source: Quickshell.iconPath(IconResolver.resolve(rect.appId), true)
                     visible: source !== ""
                     fillMode: Image.PreserveAspectFit
+
+                    Behavior on margins {
+                        enabled: !root.skipAnimation
+                        NumberAnimation {
+                            duration: 300
+                            easing.type: Easing.OutCubic
+                        }
+                    }
                 }
             }
         }

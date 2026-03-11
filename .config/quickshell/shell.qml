@@ -15,11 +15,11 @@ PanelWindow {
         right: true
     }
     margins {
-        right: 6
-        left: 6
-        top: 6
+        right: 60
+        left: 60
+        top: 20
     }
-    implicitHeight: 44
+    implicitHeight: 60
     color: "transparent"
 
     Niri {

@@ -8,13 +8,13 @@ Item {
     required property var niri
     required property string outputFilter
 
-    property double dotDiameter: 20
-    property double innerDotDiameter: dotDiameter * 0.50
+    property double dotDiameter: 25
+    property double innerDotDiameter: dotDiameter * 0.40
 
     Row {
         id: row
         anchors.centerIn: parent
-        spacing: 16
+        spacing: 40
 
         onWidthChanged: {
             for (var i = 0; i < repeater.count; i++) {

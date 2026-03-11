@@ -38,15 +38,15 @@ layout {
         off
     }
     border {
-        width 4
+        width 8
         active-color "#000000"
         inactive-color "#000000"
     }
     struts {
         left 0
-        right 25
-        top 0
-        bottom 25
+        right 0
+        top -40
+        bottom 0
     }
 }
 hotkey-overlay {
