@@ -8,7 +8,8 @@ Item {
     required property var niri
     required property string outputFilter
 
-    property int dotDiameter: 20
+    property double dotDiameter: 20
+    property double innerDotDiameter: dotDiameter * 0.50
 
     Row {
         id: row
@@ -68,15 +69,15 @@ Item {
     Rectangle {
         id: indicator
         z: 10
-        height: root.dotDiameter * 0.33
-        radius: 6
+        height: root.innerDotDiameter
+        radius: root.innerDotDiameter / 2
         color: Colors.primary
         visible: initialized
         anchors.verticalCenter: row.verticalCenter
 
         property bool initialized: false
         property real centerX: 0
-        property real stretchWidth: root.dotDiameter * 0.33
+        property real stretchWidth: root.innerDotDiameter
 
         x: centerX - stretchWidth / 2
         width: stretchWidth
@@ -91,7 +92,7 @@ Item {
             NumberAnimation {
                 target: indicator
                 property: "stretchWidth"
-                to: Math.abs(stretchAnimation.toX - stretchAnimation.fromX) + root.dotDiameter * 0.33
+                to: Math.abs(stretchAnimation.toX - stretchAnimation.fromX) + root.innerDotDiameter
                 duration: 120
                 easing.type: Easing.OutQuad
             }
@@ -107,7 +108,7 @@ Item {
             NumberAnimation {
                 target: indicator
                 property: "stretchWidth"
-                to: root.dotDiameter * 0.33
+                to: root.innerDotDiameter
                 duration: 120
                 easing.type: Easing.InOutQuad
             }

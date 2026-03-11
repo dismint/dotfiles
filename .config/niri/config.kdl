@@ -26,7 +26,7 @@ output "HDMI-A-1" {
     transform "90"
 }
 layout {
-    gaps 10
+    gaps 60
     always-center-single-column
     preset-column-widths {
         proportion 0.5
@@ -39,15 +39,14 @@ layout {
     }
     border {
         width 4
-        active-color "#b4d48c"
-        inactive-color "#827e79"
-        urgent-color "#c1857c"
+        active-color "#000000"
+        inactive-color "#000000"
     }
     struts {
         left 0
-        right 0
+        right 25
         top 0
-        bottom 0
+        bottom 25
     }
 }
 hotkey-overlay {
@@ -59,8 +58,16 @@ animations {
     slowdown 1.5
 }
 window-rule {
-    geometry-corner-radius 5
+    geometry-corner-radius 1
     clip-to-geometry true
+    shadow {
+        on
+        offset x=25 y=25
+        softness 0
+        spread 0
+        color "#000000"
+        inactive-color "#000000"
+    }
 }
 binds {
     Mod+Return {
@@ -204,6 +211,7 @@ debug {
 }
 overview {
     zoom 0.25
+    backdrop-color "#131217"
 }
 spawn-at-startup "awww-daemon"
 

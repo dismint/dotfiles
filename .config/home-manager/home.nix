@@ -31,12 +31,13 @@
     buf
     bun
     claude-code
-    vesktop
+    dm-sans
     eza
     ffmpeg
     fish
     fzf
     gcc
+    geist-font
     gh
     git
     gnumake
@@ -54,6 +55,7 @@
     nodePackages.typescript-language-server
     nodejs_24
     openssh
+    pastel
     prettier
     pyrefly
     python314
@@ -70,6 +72,7 @@
     typescript-language-server
     unzip
     uv
+    vesktop
     vue-language-server
     yazi
     zig

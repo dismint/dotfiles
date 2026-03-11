@@ -6,7 +6,7 @@ $directory\
 $git_branch$git_commit$git_metrics$git_status\
 $fill\
 $time
-$shell$os\
+$shell [on](fg:#515c74) $os\
 $fill\
 $bun$python$golang
 $character
@@ -14,23 +14,23 @@ $character
 command_timeout = 500  # ms
 
 [bun]
-style = "bold fg:#A292A3"
+style = "bold fg:#84ab89"
 [python]
-style = "bold fg:#A292A3"
+style = "bold fg:#84ab89"
 [golang]
-style = "bold fg:#A292A3"
+style = "bold fg:#84ab89"
 
-[os]
-style = "fg:#625E5A"
-format = "on [$name]($style) "
-disabled = false
 [shell]
-style = "fg:#625E5A"
-format = "[$indicator]($style) "
+style = "fg:#d3d9b2"
+format = "[$indicator]($style)"
+disabled = false
+[os]
+style = "fg:#d3d9b2"
+format = "[$name]($style) "
 disabled = false
 
 [directory]
-style = "fg:#8ba4b0"
+style = "fg:#84ab89"
 format = "[$path]($style) "
 truncate_to_repo = false
 
@@ -38,21 +38,22 @@ truncate_to_repo = false
 symbol = " "
 
 [time]
-style = "fg:#8ba4b0"
+style = "fg:#84ab89"
 format = " [$time]($style) "
 disabled = false
 
 [character]
-success_symbol = "[\\$](fg:#87A987)"  
-error_symbol = "[\\$](fg:#c4746e)"  
+success_symbol = "[\\$](fg:#84ab89)"  
+error_symbol = "[\\$](fg:#ab8484)"  
 
 [git_branch]
-style = "fg:#8992a7"
+style = "fg:#3e5587"
+format = "[on](fg:#515c74) [$branch]($style) "
 [git_commit]
-style = "fg:#8992a7"
+style = "fg:#5b606a"
 [git_metrics]
-added_style = "bold fg:#87A987"
-deleted_style = "bold fg:#C4746E"
+added_style = "bold fg:#84ab89"
+deleted_style = "bold fg:#ab8484"
 disabled = false
 [git_status]
-style = "bold fg:#C4B28A"
+style = "bold fg:#a8ab84"
