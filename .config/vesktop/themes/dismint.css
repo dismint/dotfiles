@@ -1,0 +1,18 @@
+.theme-dark {
+  --background-primary: #ff0000;
+  --background-secondary: #ff0000;
+  --background-tertiary: #ff0000;
+  --background-floating: #ff0000;
+  --background-surface-high: #131217;
+  --background-surface-highest: #ff0000;
+  --background-base-lowest: #131217;
+  --background-base-low: #131217;
+  --background-base-lower: #0f0e12;
+  --user-profile-overlay-background: #0f0e12;
+  --text-strong: #d3d9b2;
+  --text-default: #d3d9b2;
+}
+* {
+  font-family: "Geist", sans-serif !important;
+  font-size: 15px !important;
+}
