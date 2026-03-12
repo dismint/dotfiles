@@ -8,8 +8,8 @@ Item {
     required property var niri
     required property string outputFilter
 
-    property double dotDiameter: 25
-    property double innerDotDiameter: dotDiameter * 0.60
+    property double dotDiameter: 15
+    property double innerDotDiameter: dotDiameter * 1.20
 
     Row {
         id: row

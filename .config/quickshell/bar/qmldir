@@ -3,4 +3,5 @@ singleton Colors 1.0 Colors.qml
 singleton IconResolver 1.0 IconResolver.qml
 LayoutPreview 1.0 LayoutPreview.qml
 WorkspaceIndicator 1.0 WorkspaceIndicator.qml
+FlipDigit 1.0 FlipDigit.qml
 Time 1.0 Time.qml
