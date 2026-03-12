@@ -93,10 +93,10 @@ Item {
                     }
                 }
 
-                x: animX * root.scale + 1
-                y: animY * root.scale + 1
-                width: Math.max(animW * root.scale - 2, 3)
-                height: Math.max(animH * root.scale - 2, 3)
+                x: animX * root.scale + 2
+                y: animY * root.scale + 2
+                width: Math.max(animW * root.scale - 4, 3)
+                height: Math.max(animH * root.scale - 4, 3)
                 radius: 2
                 color: windowId === root.focusedWindowId ? Colors.primary : Qt.lighter(Colors.background, 2.5)
 
@@ -107,22 +107,13 @@ Item {
                 }
 
                 Image {
-                    property double smaller: Math.min(root.totalWidth * root.scale, root.totalHeight * root.scale)
-                    property double margins: smaller < 20 ? 2 : (smaller < 40 ? 4 : 8)
+                    property double margins: Math.min(rect.pixelW, rect.pixelH) * 0.005
 
                     anchors.fill: parent
                     anchors.margins: margins
                     source: Quickshell.iconPath(IconResolver.resolve(rect.appId), true)
                     visible: source !== ""
                     fillMode: Image.PreserveAspectFit
-
-                    Behavior on margins {
-                        enabled: !root.skipAnimation
-                        NumberAnimation {
-                            duration: 300
-                            easing.type: Easing.OutCubic
-                        }
-                    }
                 }
             }
         }

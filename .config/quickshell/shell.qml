@@ -67,20 +67,37 @@ PanelWindow {
             x += columns[c].width;
         }
 
+        var maxColHeight = 0;
+        for (var col in columns) {
+            var colHeight = 0;
+            for (var t in columns[col].tiles)
+                colHeight += columns[col].tiles[t];
+            maxColHeight = Math.max(maxColHeight, colHeight);
+        }
+
+        // normalize
         var tileY = {};
+        var tileH = {};
         for (var col in columns) {
             tileY[col] = {};
+            tileH[col] = {};
+            var colHeight = 0;
+            for (var t in columns[col].tiles)
+                colHeight += columns[col].tiles[t];
+            var scale = colHeight > 0 ? maxColHeight / colHeight : 1;
             var sortedTiles = Object.keys(columns[col].tiles).map(Number).sort((a, b) => a - b);
             var y = 0;
             for (var t of sortedTiles) {
                 tileY[col][t] = y;
-                y += columns[col].tiles[t];
+                tileH[col][t] = columns[col].tiles[t] * scale;
+                y += tileH[col][t];
             }
         }
 
         return {
             colX,
-            tileY
+            tileY,
+            tileH
         };
     }
 
@@ -107,7 +124,7 @@ PanelWindow {
                 windowsModel.setProperty(i, "pixelX", positions.colX[col] || 0);
                 windowsModel.setProperty(i, "pixelY", positions.tileY[col]?.[tile] || 0);
                 windowsModel.setProperty(i, "pixelW", incoming.layout.tile_size[0]);
-                windowsModel.setProperty(i, "pixelH", incoming.layout.tile_size[1]);
+                windowsModel.setProperty(i, "pixelH", positions.tileH[col]?.[tile] || incoming.layout.tile_size[1]);
                 delete incomingById[incoming.id];
             } else {
                 toRemove.push(i);
@@ -129,7 +146,7 @@ PanelWindow {
                 pixelX: positions.colX[col] || 0,
                 pixelY: positions.tileY[col]?.[tile] || 0,
                 pixelW: win.layout.tile_size[0],
-                pixelH: win.layout.tile_size[1]
+                pixelH: positions.tileH[col]?.[tile] || win.layout.tile_size[1]
             });
         }
 
