@@ -73,6 +73,7 @@
     unzip
     uv
     vesktop
+    vivaldi
     vue-language-server
     yazi
     zig
