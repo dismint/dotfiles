@@ -38,7 +38,7 @@ layout {
         off
     }
     border {
-        width 4
+        width 2
         active-color "#d3d9b2"
         inactive-color "#000000"
     }
@@ -58,7 +58,7 @@ animations {
     slowdown 1.5
 }
 window-rule {
-    geometry-corner-radius 1
+    geometry-corner-radius 4
     clip-to-geometry true
     shadow {
         on
