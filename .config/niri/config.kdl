@@ -38,7 +38,7 @@ layout {
         off
     }
     border {
-        width 2
+        width 4
         active-color "#d3d9b2"
         inactive-color "#000000"
     }
