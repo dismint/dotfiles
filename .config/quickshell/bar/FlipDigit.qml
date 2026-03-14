@@ -5,49 +5,33 @@ Item {
 
     property string value: ""
     property string _oldValue: ""
-    property bool _animating: false
 
-    width: 18
-    height: 28
-
-    clip: true
+    width: 21
+    height: 31
 
     onValueChanged: {
-        if (_oldValue !== "" && _oldValue !== value) {
-            _animating = true;
-            oldTile.y = 0;
-            newTile.y = -root.height;
-            slideAnim.start();
-        } else {
-            _oldValue = value;
+        if (_oldValue !== "") {
+            liftAnimation.restart();
         }
+        _oldValue = value;
     }
 
-    // old digit tile (slides out downward)
+    // offset shadow
     Rectangle {
-        id: oldTile
-        width: parent.width
-        height: parent.height
-        y: 0
+        x: 3
+        y: 3
+        width: 18
+        height: 28
         radius: 4
-        color: Qt.lighter(Colors.background, 2.0)
-        visible: _animating
-
-        Text {
-            anchors.centerIn: parent
-            text: root._oldValue
-            color: Colors.text
-            font.family: "Maple Mono NF"
-            font.pixelSize: 20
-        }
+        color: Colors.text
     }
 
-    // new digit tile (slides in from top)
     Rectangle {
-        id: newTile
-        width: parent.width
-        height: parent.height
-        y: _animating ? -root.height : 0
+        id: tile
+        x: 3
+        y: 3
+        width: 18
+        height: 28
         radius: 4
         color: Qt.lighter(Colors.background, 2.0)
 
@@ -60,30 +44,40 @@ Item {
         }
     }
 
-    ParallelAnimation {
-        id: slideAnim
+    SequentialAnimation {
+        id: liftAnimation
 
-        NumberAnimation {
-            target: oldTile
-            property: "y"
-            from: 0
-            to: root.height
-            duration: 1000
-            easing.type: Easing.InOutQuad
+        ParallelAnimation {
+            NumberAnimation {
+                target: tile
+                property: "x"
+                to: 0
+                duration: 350
+                easing.type: Easing.OutCubic
+            }
+            NumberAnimation {
+                target: tile
+                property: "y"
+                to: 0
+                duration: 350
+                easing.type: Easing.OutCubic
+            }
         }
-
-        NumberAnimation {
-            target: newTile
-            property: "y"
-            from: -root.height
-            to: 0
-            duration: 1000
-            easing.type: Easing.InOutQuad
-        }
-
-        onFinished: {
-            root._oldValue = root.value;
-            root._animating = false;
+        ParallelAnimation {
+            NumberAnimation {
+                target: tile
+                property: "x"
+                to: 3
+                duration: 350
+                easing.type: Easing.InCubic
+            }
+            NumberAnimation {
+                target: tile
+                property: "y"
+                to: 3
+                duration: 350
+                easing.type: Easing.InCubic
+            }
         }
     }
 }

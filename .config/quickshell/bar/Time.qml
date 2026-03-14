@@ -10,7 +10,7 @@ Item {
     implicitHeight: timeRow.implicitHeight
 
     Process {
-        id: dateProc
+        id: dateProcess
         command: ["date", "+%H:%M:%S"]
         running: true
         stdout: StdioCollector {
@@ -22,22 +22,21 @@ Item {
         interval: 1000
         running: true
         repeat: true
-        onTriggered: dateProc.running = true
+        onTriggered: dateProcess.running = true
     }
 
     Row {
         id: timeRow
         spacing: 2
 
-        // HH
+        // hours
         FlipDigit {
-            value: timeString.length >= 1 ? timeString[0] : "0"
+            value: clock.timeString.length >= 1 ? clock.timeString[0] : "0"
         }
         FlipDigit {
-            value: timeString.length >= 2 ? timeString[1] : "0"
+            value: clock.timeString.length >= 2 ? clock.timeString[1] : "0"
         }
 
-        // :
         Text {
             text: ":"
             color: Colors.text
@@ -48,15 +47,14 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
         }
 
-        // MM
+        // minutes
         FlipDigit {
-            value: timeString.length >= 4 ? timeString[3] : "0"
+            value: clock.timeString.length >= 4 ? clock.timeString[3] : "0"
         }
         FlipDigit {
-            value: timeString.length >= 5 ? timeString[4] : "0"
+            value: clock.timeString.length >= 5 ? clock.timeString[4] : "0"
         }
 
-        // :
         Text {
             text: ":"
             color: Colors.text
@@ -67,12 +65,12 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
         }
 
-        // SS
+        // seconds
         FlipDigit {
-            value: timeString.length >= 7 ? timeString[6] : "0"
+            value: clock.timeString.length >= 7 ? clock.timeString[6] : "0"
         }
         FlipDigit {
-            value: timeString.length >= 8 ? timeString[7] : "0"
+            value: clock.timeString.length >= 8 ? clock.timeString[7] : "0"
         }
     }
 }
