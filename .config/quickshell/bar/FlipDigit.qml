@@ -23,7 +23,7 @@ Item {
         width: 18
         height: 28
         radius: 4
-        color: Colors.accent
+        color: Colors.primary
     }
 
     Rectangle {
