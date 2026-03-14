@@ -78,18 +78,18 @@ set --global fish_color_autosuggestion '#515c74'
 set --global fish_color_cancel '#ff0000'
 set --global fish_color_command '#84ab89'
 set --global fish_color_comment '#5b606a'
-set --global fish_color_end '#ff0000'
+set --global fish_color_end '#3e5587'
 set --global fish_color_error '#ab8484'
 set --global fish_color_escape '#ff0000'
 set --global fish_color_history_current --bold
 set --global fish_color_host '#ff0000'
-set --global fish_color_operator '#ff0000'
+set --global fish_color_operator '#84ab89'
 set --global fish_color_option '#3e5587'
 set --global fish_color_param '#3e5587'
 set --global fish_color_quote '#3e5587'
 set --global fish_color_redirection '#ff0000'
-set --global fish_color_search_match '#00ff00'
-set --global fish_color_selection '#00ff00' --bold --background=brblack
+set --global fish_color_search_match '#ff0000'
+set --global fish_color_selection '#ff0000' --bold --background=brblack
 set --global fish_color_valid_path --underline
 set --global fish_pager_color_completion normal
 set --global fish_pager_color_description '#3e5587' -i
