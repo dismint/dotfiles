@@ -186,9 +186,17 @@ PanelWindow {
         color: Bar.Colors.background
     }
 
-    Bar.LayoutPreview {
+    Bar.Time {
+        id: clockDisplay
         anchors.left: parent.left
-        anchors.leftMargin: 4
+        anchors.leftMargin: 16
+        anchors.verticalCenter: parent.verticalCenter
+    }
+
+    Bar.LayoutPreview {
+        id: layoutPreview
+        anchors.left: clockDisplay.right
+        anchors.leftMargin: 32
         anchors.verticalCenter: parent.verticalCenter
         windowsModel: windowsModel
         focusedWindowId: panel.focusedWindowId
@@ -202,11 +210,5 @@ PanelWindow {
         height: parent.height
         niri: niri
         outputFilter: "DP-1"
-    }
-
-    Bar.Time {
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.rightMargin: 16
     }
 }
