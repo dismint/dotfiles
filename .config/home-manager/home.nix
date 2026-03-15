@@ -33,6 +33,7 @@
     claude-code
     dm-sans
     eza
+    fastfetch
     ffmpeg
     fish
     fzf
@@ -48,6 +49,7 @@
     kdlfmt
     libx11
     litecli
+    lmstudio
     lua-language-server
     neovim
     nixfmt

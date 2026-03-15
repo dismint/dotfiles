@@ -211,4 +211,12 @@ PanelWindow {
         niri: niri
         outputFilter: "DP-1"
     }
+
+    Bar.SystrayContent {
+        id: systrayContent
+        anchors.right: parent.right
+        anchors.rightMargin: 16
+        anchors.verticalCenter: parent.verticalCenter
+        parentWindow: panel
+    }
 }

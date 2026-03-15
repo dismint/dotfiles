@@ -96,3 +96,8 @@ set --global fish_pager_color_description '#3e5587' -i
 set --global fish_pager_color_prefix normal --bold --underline
 set --global fish_pager_color_progress '--background=#3e5587' '#d3d9b2'
 set --global fish_pager_color_selected_background -r
+
+# Added by LM Studio CLI (lms)
+set -gx PATH $PATH /home/dismint/.lmstudio/bin
+# End of LM Studio CLI section
+
