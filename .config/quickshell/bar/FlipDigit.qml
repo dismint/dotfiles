@@ -33,7 +33,7 @@ Item {
         width: 18
         height: 28
         radius: 4
-        color: Qt.lighter(Colors.background, 2.0)
+        color: Colors.surface
 
         Text {
             anchors.centerIn: parent

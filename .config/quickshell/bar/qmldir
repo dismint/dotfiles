@@ -6,3 +6,6 @@ WorkspaceIndicator 1.0 WorkspaceIndicator.qml
 FlipDigit 1.0 FlipDigit.qml
 Time 1.0 Time.qml
 SystrayContent 1.0 SystrayContent.qml
+SystrayIcon 1.0 SystrayIcon.qml
+SystrayContextMenu 1.0 SystrayContextMenu.qml
+SystrayContextMenuItem 1.0 SystrayContextMenuItem.qml
