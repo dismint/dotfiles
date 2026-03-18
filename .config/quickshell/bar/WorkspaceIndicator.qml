@@ -49,6 +49,11 @@ Item {
                     }
                 }
 
+                onXChanged: {
+                    if (isFocused && visible && width > 0)
+                        root.goTo(this, false);
+                }
+
                 Rectangle {
                     anchors.centerIn: parent
                     width: root.dotDiameter

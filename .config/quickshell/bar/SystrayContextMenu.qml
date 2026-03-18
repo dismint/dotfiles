@@ -54,10 +54,10 @@ PopupWindow {
         }
 
         Rectangle {
-            x: contextMenu.shadowOffset * 1.5
-            y: contextMenu.shadowOffset * 1.5
-            width: contextMenu.menuWidth - contextMenu.shadowOffset
-            height: menuClip.targetHeight - contextMenu.shadowOffset * 1.5
+            x: contextMenu.shadowOffset
+            y: contextMenu.shadowOffset
+            width: contextMenu.menuWidth
+            height: menuClip.targetHeight - contextMenu.shadowOffset
             radius: 4
             color: Colors.primary
         }
