@@ -4,6 +4,7 @@ import Niri 0.1
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Quickshell.Services.Notifications
 
 import "bar" as Bar
 
@@ -31,6 +32,27 @@ PanelWindow {
             } else {
                 panel.pendingRefresh = true;
             }
+        }
+    }
+
+    NotificationServer {
+        id: notificationServer
+        bodySupported: true
+        actionsSupported: true
+        persistenceSupported: true
+        imageSupported: true
+        keepOnReload: true
+
+        onNotification: notification => {
+            notification.tracked = true;
+            var groupKey = (notification.appName ?? "") + ":" + (notification.summary ?? "");
+            var notifId = notification.id;
+            notification.closed.connect(function(reason) {
+                // reason 3 = CloseRequested (app closed it, e.g. discord replacing with newer message)
+                if (reason === 3)
+                    notificationCenter.handleRemoteClose(notifId, groupKey);
+            });
+            notificationCenter.pushNotification(notification);
         }
     }
 
@@ -210,6 +232,34 @@ PanelWindow {
         height: parent.height
         niri: niri
         outputFilter: "DP-1"
+    }
+
+    Bar.NotificationCenter {
+        id: notificationCenter
+        anchors.right: systrayContent.left
+        anchors.rightMargin: 8
+        anchors.verticalCenter: parent.verticalCenter
+        parentWindow: panel
+        systrayWidth: systrayContent.width + 16
+
+        bellMouse.onClicked: {
+            notificationCenter.togglePopup(notificationPopup);
+        }
+    }
+
+    Bar.NotificationPopup {
+        id: notificationPopup
+        parentWindow: panel
+        notificationModel: notificationCenter.notificationHistory
+        menuWidth: notificationCenter.expandedWidth
+        visible: false
+
+        onDismissRequested: index => {
+            notificationCenter.dismissNotification(index);
+        }
+        onActionRequested: index => {
+            notificationCenter.handleCardAction(index);
+        }
     }
 
     Bar.SystrayContent {
