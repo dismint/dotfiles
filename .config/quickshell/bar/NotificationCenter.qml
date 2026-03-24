@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import Quickshell.Services.Notifications
 
 Rectangle {
     id: notificationCenter
@@ -12,10 +11,10 @@ Rectangle {
     property bool popupOpen: false
     property var activeNotification: null
     property var activeNotificationRef: null
-    property string activeGroupKey: ""
+    property int activeGroupKey: -1
 
     property real collapsedWidth: 54
-    property real inlineWidth: 300
+    property real inlineWidth: 450
     property real expandedWidth: collapsedWidth + inlineWidth + 8
 
     property real marqueeScrollTo: 0
@@ -24,6 +23,7 @@ Rectangle {
     property alias notificationHistory: notificationHistory
     property alias bellMouse: bellMouse
     property real systrayWidth: 0
+    property var activePopup: null
 
     width: (expanded || popupOpen) ? expandedWidth : collapsedWidth
     height: 36
@@ -38,160 +38,133 @@ Rectangle {
         }
     }
 
-    // grouped notification model
-    // each entry: { groupKey, summary, body, appName, appIcon, image, history }
-    // grouped by appName + summary (e.g. same discord conversation)
-    // history is a JSON string of previous versions: [{"body":"..."}, ...]
+    // each entry: { notifId, summary, body, appName, appIcon, image }
+    // keyed by notification id
     ListModel {
         id: notificationHistory
     }
 
-    // tracks which notification id is the latest for each group
-    property var latestNotifIdByGroup: ({})
-    // stores notification object refs for invoking actions from the popup
-    property var notifRefsByGroup: ({})
+    property var notifRefById: ({})
 
-    function findByGroupKey(key) {
+    function findByNotifId(id) {
         for (var i = 0; i < notificationHistory.count; i++) {
-            if (notificationHistory.get(i).groupKey === key)
+            if (notificationHistory.get(i).notifId === id)
                 return i;
         }
         return -1;
     }
 
-    function pushNotification(notification) {
-        var summary = notification.summary ?? "";
-        var body = notification.body ?? "";
-        var appName = notification.appName ?? "";
-        var appIcon = notification.appIcon ?? "";
-        var image = notification.image ?? "";
-        var groupKey = appName + ":" + summary;
-        var notifId = notification.id;
-
-        latestNotifIdByGroup[groupKey] = notifId;
-        notifRefsByGroup[groupKey] = notification;
-
-        var existingIndex = findByGroupKey(groupKey);
-        if (existingIndex >= 0) {
-            var existing = notificationHistory.get(existingIndex);
-            var oldHistory = JSON.parse(existing.history || "[]");
-            oldHistory.unshift({ body: existing.body });
-            notificationHistory.setProperty(existingIndex, "body", body);
-            notificationHistory.setProperty(existingIndex, "appIcon", appIcon);
-            notificationHistory.setProperty(existingIndex, "image", image);
-            notificationHistory.setProperty(existingIndex, "history", JSON.stringify(oldHistory));
-            if (existingIndex > 0)
-                notificationHistory.move(existingIndex, 0, 1);
-        } else {
-            notificationHistory.insert(0, {
-                groupKey: groupKey,
-                summary: summary,
-                body: body,
-                appName: appName,
-                appIcon: appIcon,
-                image: image,
-                history: "[]"
-            });
-        }
-
-        activeNotification = { summary: summary, body: body, image: image, appIcon: appIcon };
-        activeNotificationRef = notification;
-        activeGroupKey = groupKey;
-        expanded = true;
-        marqueeAnimation.stop();
-        marqueeText.x = 0;
-        computeMarqueeTimer.restart();
+    function clearNotifTracking(notifId) {
+        delete notifRefById[notifId];
     }
 
-    // called when a notification is closed by the remote app
-    // keeps history intact, only collapses the inline preview
-    function handleRemoteClose(notifId, groupKey) {
-        if (latestNotifIdByGroup[groupKey] !== notifId)
-            return;
-        delete latestNotifIdByGroup[groupKey];
-        delete notifRefsByGroup[groupKey];
-        if (activeGroupKey === groupKey) {
-            expanded = false;
-            activeNotification = null;
-            activeNotificationRef = null;
-            activeGroupKey = "";
-            autoDismissTimer.stop();
-            marqueeAnimation.stop();
-            marqueeText.x = 0;
-        }
-    }
-
-    // called when a card in the popup is clicked
-    function handleCardAction(index) {
-        var item = notificationHistory.get(index);
-        if (!item)
-            return;
-        var ref = notifRefsByGroup[item.groupKey];
-        if (ref && ref.actions && ref.actions.length > 0)
-            ref.actions[0].invoke();
-        delete latestNotifIdByGroup[item.groupKey];
-        delete notifRefsByGroup[item.groupKey];
-        notificationHistory.remove(index);
-    }
-
-    function dismissNotification(index) {
-        var item = notificationHistory.get(index);
-        if (item) {
-            delete latestNotifIdByGroup[item.groupKey];
-            delete notifRefsByGroup[item.groupKey];
-        }
-        notificationHistory.remove(index);
-    }
-
-    function handlePreviewClick() {
-        var ref = activeNotificationRef;
-        if (ref && ref.actions && ref.actions.length > 0)
-            ref.actions[0].invoke();
-        if (activeGroupKey !== "") {
-            delete latestNotifIdByGroup[activeGroupKey];
-            delete notifRefsByGroup[activeGroupKey];
-            var idx = findByGroupKey(activeGroupKey);
-            if (idx >= 0)
-                notificationHistory.remove(idx);
-        }
+    function clearInlinePreview() {
         expanded = false;
         activeNotification = null;
         activeNotificationRef = null;
-        activeGroupKey = "";
+        activeGroupKey = -1;
         autoDismissTimer.stop();
         marqueeAnimation.stop();
         marqueeText.x = 0;
     }
 
-    Timer {
-        id: computeMarqueeTimer
-        interval: 50
-        onTriggered: {
-            var textWidth = notificationCenter.inlineWidth - (inlineImage.visible ? inlineImage.width + 8 : 0);
-            var overflow = marqueeText.implicitWidth - textWidth;
-            if (overflow > 0) {
-                notificationCenter.marqueeScrollTo = -overflow - 16;
-                notificationCenter.marqueeScrollDuration = overflow * 8;
-            } else {
-                notificationCenter.marqueeScrollTo = 0;
-                notificationCenter.marqueeScrollDuration = 0;
-            }
-            var scrollTime = overflow > 0 ? 2000 + overflow * 8 + 1000 + 300 : 0;
-            autoDismissTimer.interval = Math.max(5000, scrollTime + 1000);
-            autoDismissTimer.restart();
-            marqueeAnimation.restart();
-        }
+    function pushNotification(notification) {
+        var notifId = notification.id;
+        var summary = notification.summary ?? "";
+        var body = notification.body ?? "";
+        var appName = notification.appName ?? "";
+        var appIcon = notification.appIcon ?? "";
+        var image = notification.image ?? "";
+
+        notifRefById[notifId] = notification;
+
+        notificationHistory.insert(0, {
+            notifId: notifId,
+            summary: summary,
+            body: body,
+            appName: appName,
+            appIcon: appIcon,
+            image: image
+        });
+
+        activeNotification = { summary: summary, body: body, image: image, appIcon: appIcon };
+        activeNotificationRef = notification;
+        activeGroupKey = notifId;
+        expanded = true;
+        marqueeAnimation.stop();
+        marqueeText.x = 0;
     }
 
-    function togglePopup(popup) {
-        if (popupOpen) {
-            popupOpen = false;
-            popup.animateOpen = false;
-            popupCloseTimer.popup = popup;
-            popupCloseTimer.restart();
+    function handleRemoteClose(notifId) {
+        var idx = findByNotifId(notifId);
+        if (idx < 0)
+            return;
+        clearNotifTracking(notifId);
+        notificationHistory.remove(idx);
+        if (activeGroupKey === notifId)
+            clearInlinePreview();
+    }
+
+    function handleCardAction(index) {
+        var item = notificationHistory.get(index);
+        if (!item)
+            return;
+        var ref = notifRefById[item.notifId];
+        clearNotifTracking(item.notifId);
+        notificationHistory.remove(index);
+        if (ref && ref.actions && ref.actions.length > 0)
+            ref.actions[0].invoke();
+    }
+
+    function dismissNotification(index) {
+        var item = notificationHistory.get(index);
+        if (item)
+            clearNotifTracking(item.notifId);
+        notificationHistory.remove(index);
+    }
+
+    function handlePreviewClick() {
+        if (activeGroupKey !== -1) {
+            var idx = findByNotifId(activeGroupKey);
+            if (idx >= 0)
+                handleCardAction(idx);
+        }
+        clearInlinePreview();
+    }
+
+    function computeMarquee() {
+        var textWidth = inlineWidth - (inlineImage.visible ? inlineImage.width + 8 : 0);
+        var overflow = marqueeText.implicitWidth - textWidth;
+        if (overflow > 0) {
+            marqueeScrollTo = -overflow - 16;
+            marqueeScrollDuration = overflow * 8;
         } else {
-            var finalX = parentWindow.width - expandedWidth - 8 - systrayWidth;
-            popup.popupX = finalX;
+            marqueeScrollTo = 0;
+            marqueeScrollDuration = 0;
+        }
+        var scrollTime = overflow > 0 ? 2000 + overflow * 8 + 1000 + 300 : 0;
+        autoDismissTimer.interval = Math.max(5000, scrollTime + 1000);
+        autoDismissTimer.restart();
+        marqueeAnimation.restart();
+    }
+
+    function closePopup() {
+        if (!popupOpen || !activePopup)
+            return;
+        popupOpen = false;
+        activePopup.animateOpen = false;
+        popupCloseTimer.popup = activePopup;
+        popupCloseTimer.restart();
+        activePopup = null;
+    }
+
+    function togglePopup(popup, overrideSystrayWidth) {
+        if (popupOpen) {
+            closePopup();
+        } else {
+            var sw = (overrideSystrayWidth !== undefined) ? overrideSystrayWidth : systrayWidth;
+            popup.popupX = parentWindow.width - expandedWidth - 8 - sw;
+            activePopup = popup;
             popupOpen = true;
             popup.visible = true;
             popup.animateOpen = true;
@@ -211,14 +184,7 @@ Rectangle {
     Timer {
         id: autoDismissTimer
         interval: 5000
-        onTriggered: {
-            notificationCenter.expanded = false;
-            notificationCenter.activeNotification = null;
-            notificationCenter.activeNotificationRef = null;
-            notificationCenter.activeGroupKey = "";
-            marqueeAnimation.stop();
-            marqueeText.x = 0;
-        }
+        onTriggered: notificationCenter.clearInlinePreview()
     }
 
     Rectangle {
@@ -301,11 +267,7 @@ Rectangle {
                 source: {
                     if (!notificationCenter.activeNotification)
                         return "";
-                    if (notificationCenter.activeNotification.image !== "")
-                        return notificationCenter.activeNotification.image;
-                    if (notificationCenter.activeNotification.appIcon !== "")
-                        return notificationCenter.activeNotification.appIcon;
-                    return "";
+                    return notificationCenter.activeNotification.image || notificationCenter.activeNotification.appIcon || "";
                 }
                 width: 24
                 height: 24
@@ -315,7 +277,7 @@ Rectangle {
 
             Item {
                 width: notificationCenter.inlineWidth - (inlineImage.visible ? inlineImage.width + 8 : 0) - 8
-                height: parent.height
+                height: marqueeContainer.height
                 anchors.verticalCenter: parent.verticalCenter
 
                 Text {
@@ -326,15 +288,15 @@ Rectangle {
                             return "";
                         var summary = notificationCenter.activeNotification.summary;
                         var body = notificationCenter.activeNotification.body;
-                        if (body !== "")
-                            return summary + ": " + body;
-                        return summary;
+                        var full = body !== "" ? summary + ": " + body : summary;
+                        return full.replace(/\n/g, " ↵ ");
                     }
                     color: Colors.text
                     font.family: "Maple Mono NF"
                     font.pixelSize: 13
                     font.weight: Font.Medium
                     elide: Text.ElideNone
+                    onTextChanged: function() { if (marqueeText.text !== "") Qt.callLater(notificationCenter.computeMarquee) }
                 }
             }
         }

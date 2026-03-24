@@ -7,7 +7,6 @@ PopupWindow {
     id: contextMenu
 
     property bool animateOpen: false
-    property int shadowOffset: 5
     property int menuWidth: 200
 
     required property var parentWindow
@@ -16,10 +15,10 @@ PopupWindow {
 
     anchor.window: parentWindow
     anchor.edges: Edges.Top
-    anchor.rect.x: parentWindow.width - menuWidth - shadowOffset - 16
+    anchor.rect.x: parentWindow.width - menuWidth - 16
     anchor.rect.y: parentWindow.height + 6
     color: "transparent"
-    implicitWidth: menuWidth + shadowOffset
+    implicitWidth: menuWidth
     implicitHeight: menuClip.targetHeight
 
     onVisibleChanged: {
@@ -32,7 +31,7 @@ PopupWindow {
 
     Item {
         id: menuClip
-        property real targetHeight: menuCol.height + 16 + contextMenu.shadowOffset
+        property real targetHeight: menuCol.height + 16
         anchors.left: parent.left
         anchors.right: parent.right
         height: contextMenu.animateOpen ? targetHeight : 0
@@ -54,19 +53,8 @@ PopupWindow {
         }
 
         Rectangle {
-            x: contextMenu.shadowOffset
-            y: contextMenu.shadowOffset
             width: contextMenu.menuWidth
-            height: menuClip.targetHeight - contextMenu.shadowOffset
-            radius: 4
-            color: Colors.primary
-        }
-
-        Rectangle {
-            x: 0
-            y: 0
-            width: contextMenu.menuWidth
-            height: menuClip.targetHeight - contextMenu.shadowOffset
+            height: menuClip.targetHeight
             radius: 4
             color: Colors.surface
             border.color: Colors.primary

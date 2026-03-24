@@ -26,7 +26,7 @@ output "HDMI-A-1" {
     transform "90"
 }
 layout {
-    gaps 60
+    gaps 20
     always-center-single-column
     preset-column-widths {
         proportion 0.5
@@ -40,12 +40,12 @@ layout {
     border {
         width 4
         active-color "#84ab89"
-        inactive-color "#000000"
+        inactive-color "#3e5587"
     }
     struts {
         left 0
         right 0
-        top -40
+        top 0
         bottom 0
     }
 }
@@ -60,14 +60,6 @@ animations {
 window-rule {
     geometry-corner-radius 4
     clip-to-geometry true
-    shadow {
-        on
-        offset x=25 y=25
-        softness 0
-        spread 0
-        color "#000000"
-        inactive-color "#000000"
-    }
 }
 binds {
     Mod+Return {

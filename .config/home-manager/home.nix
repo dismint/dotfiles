@@ -33,6 +33,7 @@
     claude-code
     dm-sans
     eza
+    ethtool
     fastfetch
     ffmpeg
     fish
@@ -47,6 +48,7 @@
     gopls
     grim
     kdlfmt
+    libnotify
     libx11
     litecli
     lmstudio

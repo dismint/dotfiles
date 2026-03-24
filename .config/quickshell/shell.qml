@@ -45,12 +45,10 @@ PanelWindow {
 
         onNotification: notification => {
             notification.tracked = true;
-            var groupKey = (notification.appName ?? "") + ":" + (notification.summary ?? "");
             var notifId = notification.id;
             notification.closed.connect(function(reason) {
-                // reason 3 = CloseRequested (app closed it, e.g. discord replacing with newer message)
-                if (reason === 3)
-                    notificationCenter.handleRemoteClose(notifId, groupKey);
+                if (reason === 3 || reason === "CloseRequested")
+                    notificationCenter.handleRemoteClose(notifId);
             });
             notificationCenter.pushNotification(notification);
         }
@@ -243,7 +241,9 @@ PanelWindow {
         systrayWidth: systrayContent.width + 16
 
         bellMouse.onClicked: {
-            notificationCenter.togglePopup(notificationPopup);
+            systrayContent.closeMenu();
+            systrayContent.expanded = false;
+            notificationCenter.togglePopup(notificationPopup, systrayContent.collapsedWidth + 16);
         }
     }
 
@@ -268,5 +268,9 @@ PanelWindow {
         anchors.rightMargin: 16
         anchors.verticalCenter: parent.verticalCenter
         parentWindow: panel
+        onExpandedChanged: {
+            if (expanded)
+                notificationCenter.closePopup();
+        }
     }
 }

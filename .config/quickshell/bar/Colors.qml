@@ -8,4 +8,5 @@ QtObject {
     readonly property color text: "#d3d9b2"
     readonly property color surface: Qt.lighter(background, 2.0)
     readonly property color surfaceHover: Qt.lighter(background, 3.0)
+    readonly property color danger: "#c45050"
 }

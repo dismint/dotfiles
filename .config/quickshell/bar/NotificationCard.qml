@@ -7,40 +7,30 @@ Item {
 
     property string notifSummary: ""
     property string notifBody: ""
-    property string notifAppName: ""
     property string notifAppIcon: ""
     property string notifImage: ""
-    property string notifHistory: "[]"
-
     signal dismissed()
     signal activated()
 
-    property int liftOffset: 2
-    property bool hovered: cardMouse.containsMouse && !cardMouse.drag.active
-    property bool dragging: cardMouse.drag.active
-    property var parsedHistory: {
-        try { return JSON.parse(notifHistory); }
-        catch(e) { return []; }
+    property real slideOffset: 32
+    property bool hovered: rootHover.hovered
+    property bool removing: false
+
+    height: cardFace.height
+    clip: true
+
+    HoverHandler {
+        id: rootHover
     }
 
-    height: cardFace.height + liftOffset
-
     Rectangle {
-        visible: card.hovered && !card.dragging
-        x: card.liftOffset
-        y: card.liftOffset
-        width: cardFace.width
+        id: trashArea
+        x: 0
+        y: 0
+        width: card.slideOffset
         height: cardFace.height
         radius: 6
-        color: Colors.primary
-    }
-
-    Rectangle {
-        id: cardFace
-        width: card.width
-        height: cardContent.height + 16
-        radius: 6
-        color: card.hovered ? Colors.surfaceHover : Colors.surface
+        color: trashMouse.containsMouse ? Qt.lighter(Colors.danger, 1.2) : Colors.danger
 
         Behavior on color {
             ColorAnimation {
@@ -49,12 +39,42 @@ Item {
             }
         }
 
-        x: card.liftOffset
-        y: card.hovered && !card.dragging ? 0 : card.liftOffset
+        Text {
+            anchors.centerIn: parent
+            text: "󰩹"
+            font.family: "Maple Mono NF"
+            font.pixelSize: 16
+            color: Colors.text
+        }
 
-        Behavior on y {
-            NumberAnimation {
+        MouseArea {
+            id: trashMouse
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: dismissAnimation.start()
+        }
+    }
+
+    Rectangle {
+        id: cardFace
+        width: card.width
+        height: cardContent.height + 16
+        radius: 6
+        color: card.hovered && !trashMouse.containsMouse ? Colors.surfaceHover : Colors.surface
+        x: card.hovered && !card.removing ? card.slideOffset : 0
+
+        Behavior on color {
+            ColorAnimation {
                 duration: 150
+                easing.type: Easing.OutCubic
+            }
+        }
+
+        Behavior on x {
+            enabled: !card.removing
+            NumberAnimation {
+                duration: 200
                 easing.type: Easing.OutCubic
             }
         }
@@ -64,37 +84,18 @@ Item {
             anchors.fill: parent
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
-            drag.target: cardFace
-            drag.axis: Drag.XAxis
-            drag.minimumX: 0
-            drag.maximumX: card.width
-
-            onPressed: {
-                snapBackAnimation.stop();
-                dismissAnimation.stop();
-            }
-
-            onClicked: card.activated()
-
-            onReleased: {
-                if (cardFace.x > card.width * 0.3) {
-                    dismissAnimation.start();
-                } else {
-                    snapBackAnimation.start();
-                }
-            }
+            onClicked: activateAnimation.start()
         }
 
         Column {
             id: cardContent
             anchors.left: parent.left
-            anchors.right: dismissButton.left
+            anchors.right: parent.right
             anchors.leftMargin: 8
-            anchors.rightMargin: 4
+            anchors.rightMargin: 8
             anchors.verticalCenter: parent.verticalCenter
             spacing: 4
 
-            // current (latest) notification
             Row {
                 width: parent.width
                 spacing: 8
@@ -102,13 +103,7 @@ Item {
                 Image {
                     id: notifImage
                     visible: status === Image.Ready
-                    source: {
-                        if (card.notifImage !== "")
-                            return card.notifImage;
-                        if (card.notifAppIcon !== "")
-                            return card.notifAppIcon;
-                        return "";
-                    }
+                    source: card.notifImage || card.notifAppIcon || ""
                     width: 32
                     height: 32
                     fillMode: Image.PreserveAspectFit
@@ -127,7 +122,7 @@ Item {
                         font.family: "Maple Mono NF"
                         font.pixelSize: 13
                         font.weight: Font.Bold
-                        elide: Text.ElideRight
+                        wrapMode: Text.Wrap
                     }
 
                     Text {
@@ -137,102 +132,71 @@ Item {
                         color: Colors.text
                         font.family: "Maple Mono NF"
                         font.pixelSize: 12
-                        elide: Text.ElideRight
-                        maximumLineCount: 2
-                        wrapMode: Text.WordWrap
+                        wrapMode: Text.Wrap
                         opacity: 0.7
                     }
                 }
             }
-
-            // previous messages in this group
-            Repeater {
-                model: card.parsedHistory
-
-                Text {
-                    required property var modelData
-                    required property int index
-                    width: parent.width
-                    text: modelData.body ?? ""
-                    color: Colors.text
-                    font.family: "Maple Mono NF"
-                    font.pixelSize: 11
-                    elide: Text.ElideRight
-                    maximumLineCount: 1
-                    opacity: 0.5
-                    leftPadding: notifImage.visible ? notifImage.width + 8 : 0
-                }
-            }
         }
-
-        Rectangle {
-            id: dismissButton
-            z: 1
-            anchors.top: parent.top
-            anchors.right: parent.right
-            anchors.topMargin: 4
-            anchors.rightMargin: 4
-            width: 20
-            height: 20
-            radius: 4
-            color: dismissMouse.containsMouse ? Colors.surfaceHover : "transparent"
-
-            Behavior on color {
-                ColorAnimation {
-                    duration: 150
-                    easing.type: Easing.OutCubic
-                }
-            }
-
-            Text {
-                anchors.centerIn: parent
-                text: "󰅖"
-                font.family: "Maple Mono NF"
-                font.pixelSize: 12
-                color: Colors.text
-            }
-
-            MouseArea {
-                id: dismissMouse
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
-                onClicked: card.dismissed()
-            }
-        }
-    }
-
-    NumberAnimation {
-        id: snapBackAnimation
-        target: cardFace
-        property: "x"
-        to: card.liftOffset
-        duration: 200
-        easing.type: Easing.OutCubic
     }
 
     SequentialAnimation {
         id: dismissAnimation
-
+        ScriptAction {
+            script: {
+                dismissSlideCard.from = cardFace.x;
+                dismissSlideTrash.from = trashArea.x;
+                card.removing = true;
+            }
+        }
         ParallelAnimation {
             NumberAnimation {
+                id: dismissSlideCard
                 target: cardFace
                 property: "x"
-                to: card.width
-                duration: 200
-                easing.type: Easing.OutCubic
+                to: card.width + card.slideOffset
+                duration: 750
+                easing.type: Easing.InOutCubic
             }
             NumberAnimation {
-                target: cardFace
-                property: "opacity"
-                to: 0
-                duration: 200
-                easing.type: Easing.OutCubic
+                id: dismissSlideTrash
+                target: trashArea
+                property: "x"
+                to: -card.slideOffset
+                duration: 750
+                easing.type: Easing.InOutCubic
             }
         }
+        ScriptAction { script: card.dismissed() }
+    }
 
+    SequentialAnimation {
+        id: activateAnimation
         ScriptAction {
-            script: card.dismissed()
+            script: {
+                activateSlideCard.from = cardFace.x;
+                activateSlideTrash.from = trashArea.x;
+                card.removing = true;
+            }
         }
+        ParallelAnimation {
+            NumberAnimation {
+                id: activateSlideCard
+                target: cardFace
+                property: "x"
+                to: card.width + card.slideOffset
+                duration: 750
+                easing.type: Easing.InOutCubic
+            }
+            NumberAnimation {
+                id: activateSlideTrash
+                target: trashArea
+                property: "x"
+                to: -card.slideOffset
+                duration: 750
+                easing.type: Easing.InOutCubic
+            }
+        }
+        ScriptAction { script: card.activated() }
     }
 }

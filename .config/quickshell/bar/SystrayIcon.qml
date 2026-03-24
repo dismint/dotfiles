@@ -12,7 +12,7 @@ Item {
     required property var parentWindow
     required property var systray
 
-    property int liftOffset: 2
+    property double liftOffset: 2.5
     property bool hovered: trayMouse.containsMouse
 
     width: 28
@@ -20,8 +20,8 @@ Item {
 
     Rectangle {
         visible: trayEntry.hovered
-        x: trayEntry.liftOffset
-        y: trayEntry.liftOffset
+        x: 0
+        y: 0
         width: parent.width
         height: parent.height
         radius: 6
@@ -37,22 +37,22 @@ Item {
 
         Behavior on color {
             ColorAnimation {
-                duration: 150
+                duration: 300
                 easing.type: Easing.OutCubic
             }
         }
-        x: trayEntry.hovered ? 0 : trayEntry.liftOffset
-        y: trayEntry.hovered ? 0 : trayEntry.liftOffset
+        x: trayEntry.hovered ? -trayEntry.liftOffset : 0
+        y: trayEntry.hovered ? -trayEntry.liftOffset : 0
 
         Behavior on x {
             NumberAnimation {
-                duration: 150
+                duration: 300
                 easing.type: Easing.OutCubic
             }
         }
         Behavior on y {
             NumberAnimation {
-                duration: 150
+                duration: 300
                 easing.type: Easing.OutCubic
             }
         }

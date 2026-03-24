@@ -1,16 +1,16 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Controls
 import Quickshell
 
 PopupWindow {
     id: popup
 
     property bool animateOpen: false
-    property real shadowOffset: 5
     property real menuWidth: 350
-    property real maxHeight: 400
-    property real minHeight: 80
+    property real maxHeight: 280
+    property real minHeight: 60
 
     required property var parentWindow
     required property var notificationModel
@@ -24,25 +24,33 @@ PopupWindow {
     anchor.rect.x: popupX
     anchor.rect.y: parentWindow.height + 6
     color: "transparent"
-    implicitWidth: menuWidth + shadowOffset
-    implicitHeight: maxHeight + shadowOffset
+    implicitWidth: menuWidth
+    implicitHeight: maxHeight
 
     Item {
         id: popupClip
         property real rawContentHeight: notifColumn.height + 16
         property real contentHeight: Math.max(minHeight, rawContentHeight)
         property real panelHeight: Math.min(contentHeight, maxHeight)
-        property real targetHeight: panelHeight + popup.shadowOffset
+        property real targetHeight: panelHeight
+        property bool openCloseAnimating: false
         anchors.left: parent.left
         anchors.right: parent.right
         height: popup.animateOpen ? targetHeight : 0
         opacity: popup.animateOpen ? 1.0 : 0.0
         clip: true
 
+        Connections {
+            target: popup
+            function onAnimateOpenChanged() { popupClip.openCloseAnimating = true }
+        }
+
         Behavior on height {
+            enabled: popupClip.openCloseAnimating
             NumberAnimation {
                 duration: 300
                 easing.type: Easing.OutCubic
+                onRunningChanged: if (!running) popupClip.openCloseAnimating = false
             }
         }
 
@@ -54,24 +62,34 @@ PopupWindow {
         }
 
         Rectangle {
-            x: popup.shadowOffset
-            y: popup.shadowOffset
+            id: panel
+            property real targetHeight: popupClip.panelHeight
+            property real animatedHeight: popupClip.panelHeight
             width: popup.menuWidth
-            height: popupClip.panelHeight
-            radius: 4
-            color: Colors.primary
-        }
-
-        Rectangle {
-            id: mainRect
-            x: 0
-            y: 0
-            width: popup.menuWidth
-            height: popupClip.panelHeight
+            height: animatedHeight
             radius: 4
             color: Colors.surface
             border.color: Colors.primary
             border.width: 2
+
+            onTargetHeightChanged: {
+                if (targetHeight < animatedHeight) {
+                    shrinkAnimation.from = animatedHeight;
+                    shrinkAnimation.to = targetHeight;
+                    shrinkAnimation.start();
+                } else {
+                    shrinkAnimation.stop();
+                    animatedHeight = targetHeight;
+                }
+            }
+
+            NumberAnimation {
+                id: shrinkAnimation
+                target: panel
+                property: "animatedHeight"
+                duration: 300
+                easing.type: Easing.OutCubic
+            }
 
             Flickable {
                 id: notifFlickable
@@ -80,6 +98,17 @@ PopupWindow {
                 contentHeight: notifColumn.height
                 clip: true
                 boundsBehavior: Flickable.StopAtBounds
+
+                ScrollBar.vertical: ScrollBar {
+                    active: notifFlickable.contentHeight > notifFlickable.height
+                    policy: notifFlickable.contentHeight > notifFlickable.height ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
+                    contentItem: Rectangle {
+                        implicitWidth: 4
+                        radius: 2
+                        color: Colors.primary
+                        opacity: 0.6
+                    }
+                }
 
                 Column {
                     id: notifColumn
@@ -93,16 +122,12 @@ PopupWindow {
                             required property int index
                             required property string summary
                             required property string body
-                            required property string appName
                             required property string appIcon
                             required property string image
-                            required property string history
                             notifSummary: summary
                             notifBody: body
-                            notifAppName: appName
                             notifAppIcon: appIcon
                             notifImage: image
-                            notifHistory: history
                             width: notifColumn.width
                             onDismissed: popup.dismissRequested(index)
                             onActivated: popup.actionRequested(index)
@@ -122,4 +147,5 @@ PopupWindow {
             }
         }
     }
+
 }
