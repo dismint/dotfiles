@@ -15,9 +15,18 @@ Item {
     property real slideOffset: 32
     property bool hovered: rootHover.hovered
     property bool removing: false
+    property var pendingSignal: null
 
     height: cardFace.height
     clip: true
+
+    function startRemoveAnimation(signal) {
+        pendingSignal = signal;
+        slideCard.from = cardFace.x;
+        slideTrash.from = trashArea.x;
+        removing = true;
+        removeAnimation.start();
+    }
 
     HoverHandler {
         id: rootHover
@@ -25,8 +34,6 @@ Item {
 
     Rectangle {
         id: trashArea
-        x: 0
-        y: 0
         width: card.slideOffset
         height: cardFace.height
         radius: 6
@@ -52,7 +59,7 @@ Item {
             anchors.fill: parent
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
-            onClicked: dismissAnimation.start()
+            onClicked: card.startRemoveAnimation(card.dismissed)
         }
     }
 
@@ -84,7 +91,7 @@ Item {
             anchors.fill: parent
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
-            onClicked: activateAnimation.start()
+            onClicked: card.startRemoveAnimation(card.activated)
         }
 
         Column {
@@ -141,47 +148,11 @@ Item {
     }
 
     SequentialAnimation {
-        id: dismissAnimation
-        ScriptAction {
-            script: {
-                dismissSlideCard.from = cardFace.x;
-                dismissSlideTrash.from = trashArea.x;
-                card.removing = true;
-            }
-        }
-        ParallelAnimation {
-            NumberAnimation {
-                id: dismissSlideCard
-                target: cardFace
-                property: "x"
-                to: card.width + card.slideOffset
-                duration: 750
-                easing.type: Easing.InOutCubic
-            }
-            NumberAnimation {
-                id: dismissSlideTrash
-                target: trashArea
-                property: "x"
-                to: -card.slideOffset
-                duration: 750
-                easing.type: Easing.InOutCubic
-            }
-        }
-        ScriptAction { script: card.dismissed() }
-    }
+        id: removeAnimation
 
-    SequentialAnimation {
-        id: activateAnimation
-        ScriptAction {
-            script: {
-                activateSlideCard.from = cardFace.x;
-                activateSlideTrash.from = trashArea.x;
-                card.removing = true;
-            }
-        }
         ParallelAnimation {
             NumberAnimation {
-                id: activateSlideCard
+                id: slideCard
                 target: cardFace
                 property: "x"
                 to: card.width + card.slideOffset
@@ -189,7 +160,7 @@ Item {
                 easing.type: Easing.InOutCubic
             }
             NumberAnimation {
-                id: activateSlideTrash
+                id: slideTrash
                 target: trashArea
                 property: "x"
                 to: -card.slideOffset
@@ -197,6 +168,12 @@ Item {
                 easing.type: Easing.InOutCubic
             }
         }
-        ScriptAction { script: card.activated() }
+
+        ScriptAction {
+            script: {
+                if (card.pendingSignal)
+                    card.pendingSignal();
+            }
+        }
     }
 }

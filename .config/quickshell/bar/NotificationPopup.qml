@@ -30,14 +30,13 @@ PopupWindow {
 
     Item {
         id: popupClip
-        property real rawContentHeight: notifColumn.height + 16
-        property real contentHeight: Math.max(minHeight, rawContentHeight)
-        property real panelHeight: Math.min(contentHeight, maxHeight)
-        property real targetHeight: panelHeight
+
+        property real panelHeight: Math.min(Math.max(minHeight, notifColumn.height + 16), maxHeight)
         property bool openCloseAnimating: false
+
         anchors.left: parent.left
         anchors.right: parent.right
-        height: popup.animateOpen ? targetHeight : 0
+        height: popup.animateOpen ? panelHeight : 0
         opacity: popup.animateOpen ? 1.0 : 0.0
         clip: true
 
@@ -64,30 +63,34 @@ PopupWindow {
 
         Rectangle {
             id: panel
-            property real targetHeight: popupClip.panelHeight
-            property real animatedHeight: popupClip.panelHeight
+
+            property real displayHeight: popupClip.panelHeight
+
             width: popup.menuWidth
-            height: animatedHeight
+            height: displayHeight
             radius: 4
             color: Colors.surface
             border.color: Colors.primary
             border.width: 2
 
-            onTargetHeightChanged: {
-                if (targetHeight < animatedHeight) {
-                    shrinkAnimation.from = animatedHeight;
-                    shrinkAnimation.to = targetHeight;
-                    shrinkAnimation.start();
-                } else {
-                    shrinkAnimation.stop();
-                    animatedHeight = targetHeight;
+            Connections {
+                target: popupClip
+                function onPanelHeightChanged() {
+                    if (popupClip.panelHeight < panel.displayHeight) {
+                        shrinkAnimation.from = panel.displayHeight;
+                        shrinkAnimation.to = popupClip.panelHeight;
+                        shrinkAnimation.start();
+                    } else {
+                        shrinkAnimation.stop();
+                        panel.displayHeight = popupClip.panelHeight;
+                    }
                 }
             }
 
             NumberAnimation {
                 id: shrinkAnimation
                 target: panel
-                property: "animatedHeight"
+                property: "displayHeight"
                 duration: 300
                 easing.type: Easing.OutCubic
             }
@@ -101,7 +104,6 @@ PopupWindow {
                 boundsBehavior: Flickable.StopAtBounds
 
                 ScrollBar.vertical: ScrollBar {
-                    active: notifFlickable.contentHeight > notifFlickable.height
                     policy: notifFlickable.contentHeight > notifFlickable.height ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
                     contentItem: Rectangle {
                         implicitWidth: 4
@@ -189,5 +191,4 @@ PopupWindow {
             }
         }
     }
-
 }
