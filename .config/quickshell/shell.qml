@@ -260,6 +260,10 @@ PanelWindow {
         onActionRequested: index => {
             notificationCenter.handleCardAction(index);
         }
+        onClearAllRequested: {
+            notificationCenter.notificationHistory.clear();
+            notificationCenter.notifRefById = {};
+        }
     }
 
     Bar.SystrayContent {

@@ -9,7 +9,7 @@ PopupWindow {
 
     property bool animateOpen: false
     property real menuWidth: 350
-    property real maxHeight: 280
+    property real maxHeight: 560
     property real minHeight: 60
 
     required property var parentWindow
@@ -18,6 +18,7 @@ PopupWindow {
 
     signal dismissRequested(int index)
     signal actionRequested(int index)
+    signal clearAllRequested()
 
     anchor.window: parentWindow
     anchor.edges: Edges.Top
@@ -114,6 +115,47 @@ PopupWindow {
                     id: notifColumn
                     width: parent.width
                     spacing: 6
+
+                    Rectangle {
+                        id: clearAllButton
+                        width: notifColumn.width
+                        height: visible ? 28 : 0
+                        radius: 6
+                        visible: popup.notificationModel.count > 0
+                        opacity: visible ? 1.0 : 0.0
+                        color: clearAllMouse.containsMouse ? Qt.lighter(Colors.accent, 1.3) : Colors.accent
+
+                        Behavior on opacity {
+                            NumberAnimation {
+                                duration: 300
+                                easing.type: Easing.OutCubic
+                            }
+                        }
+
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                                easing.type: Easing.OutCubic
+                            }
+                        }
+
+                        Text {
+                            anchors.centerIn: parent
+                            text: "clear all"
+                            color: Colors.text
+                            font.family: "Maple Mono NF"
+                            font.pixelSize: 12
+                            font.weight: Font.Medium
+                        }
+
+                        MouseArea {
+                            id: clearAllMouse
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: popup.clearAllRequested()
+                        }
+                    }
 
                     Repeater {
                         model: popup.notificationModel
