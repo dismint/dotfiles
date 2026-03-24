@@ -87,7 +87,12 @@ Rectangle {
             image: image
         });
 
-        activeNotification = { summary: summary, body: body, image: image, appIcon: appIcon };
+        activeNotification = {
+            summary: summary,
+            body: body,
+            image: image,
+            appIcon: appIcon
+        };
         activeNotificationRef = notification;
         activeGroupKey = notifId;
         expanded = true;
@@ -296,7 +301,10 @@ Rectangle {
                     font.pixelSize: 13
                     font.weight: Font.Medium
                     elide: Text.ElideNone
-                    onTextChanged: function() { if (marqueeText.text !== "") Qt.callLater(notificationCenter.computeMarquee) }
+                    onTextChanged: function () {
+                        if (marqueeText.text !== "")
+                            Qt.callLater(notificationCenter.computeMarquee);
+                    }
                 }
             }
         }

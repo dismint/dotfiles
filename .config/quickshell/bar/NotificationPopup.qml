@@ -18,7 +18,7 @@ PopupWindow {
 
     signal dismissRequested(int index)
     signal actionRequested(int index)
-    signal clearAllRequested()
+    signal clearAllRequested
 
     anchor.window: parentWindow
     anchor.edges: Edges.Top
@@ -42,7 +42,9 @@ PopupWindow {
 
         Connections {
             target: popup
-            function onAnimateOpenChanged() { popupClip.openCloseAnimating = true }
+            function onAnimateOpenChanged() {
+                popupClip.openCloseAnimating = true;
+            }
         }
 
         Behavior on height {
@@ -50,7 +52,8 @@ PopupWindow {
             NumberAnimation {
                 duration: 300
                 easing.type: Easing.OutCubic
-                onRunningChanged: if (!running) popupClip.openCloseAnimating = false
+                onRunningChanged: if (!running)
+                    popupClip.openCloseAnimating = false
             }
         }
 

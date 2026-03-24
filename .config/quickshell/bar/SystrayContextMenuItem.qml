@@ -12,9 +12,7 @@ Rectangle {
 
     height: modelData?.isSeparator ? 2 : 28
     radius: 4
-    color: modelData?.isSeparator ? "transparent"
-        : entryMouse.containsMouse ? Colors.surfaceHover
-        : Colors.surface
+    color: modelData?.isSeparator ? "transparent" : entryMouse.containsMouse ? Colors.surfaceHover : Colors.surface
 
     x: animateOpen ? 0 : -40
     opacity: animateOpen ? 1.0 : 0.0

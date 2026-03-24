@@ -9,8 +9,8 @@ Item {
     property string notifBody: ""
     property string notifAppIcon: ""
     property string notifImage: ""
-    signal dismissed()
-    signal activated()
+    signal dismissed
+    signal activated
 
     property real slideOffset: 32
     property bool hovered: rootHover.hovered
