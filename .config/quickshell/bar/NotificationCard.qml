@@ -9,16 +9,26 @@ Item {
     property string notifBody: ""
     property string notifAppIcon: ""
     property string notifImage: ""
+    property bool animateEntrance: false
     signal dismissed
     signal activated
 
     property real slideOffset: 32
     property bool hovered: rootHover.hovered
     property bool removing: false
+    property bool entering: false
     property var pendingSignal: null
 
     height: cardFace.height
     clip: true
+
+    Component.onCompleted: {
+        if (animateEntrance) {
+            entering = true;
+            height = 0;
+            entranceAnimation.start();
+        }
+    }
 
     function startRemoveAnimation(signal) {
         pendingSignal = signal;
@@ -34,6 +44,7 @@ Item {
 
     Rectangle {
         id: trashArea
+        visible: !card.entering
         width: card.slideOffset
         height: cardFace.height
         radius: 6
@@ -69,7 +80,7 @@ Item {
         height: cardContent.height + 16
         radius: 6
         color: card.hovered && !trashMouse.containsMouse ? Colors.surfaceHover : Colors.surface
-        x: card.hovered && !card.removing ? card.slideOffset : 0
+        x: card.hovered && !card.removing && !card.entering ? card.slideOffset : 0
 
         Behavior on color {
             ColorAnimation {
@@ -79,7 +90,7 @@ Item {
         }
 
         Behavior on x {
-            enabled: !card.removing
+            enabled: !card.removing && !card.entering
             NumberAnimation {
                 duration: 200
                 easing.type: Easing.OutCubic
@@ -148,6 +159,38 @@ Item {
     }
 
     SequentialAnimation {
+        id: entranceAnimation
+
+        ParallelAnimation {
+            NumberAnimation {
+                target: card
+                property: "height"
+                from: 0
+                to: cardFace.height
+                duration: 300
+                easing.type: Easing.OutCubic
+            }
+            NumberAnimation {
+                target: cardFace
+                property: "x"
+                from: card.width
+                to: 0
+                duration: 300
+                easing.type: Easing.OutCubic
+            }
+        }
+
+        ScriptAction {
+            script: {
+                card.entering = false;
+                card.height = Qt.binding(function () {
+                    return cardFace.height;
+                });
+            }
+        }
+    }
+
+    SequentialAnimation {
         id: removeAnimation
 
         ParallelAnimation {
@@ -169,8 +212,17 @@ Item {
             }
         }
 
+        NumberAnimation {
+            target: card
+            property: "height"
+            to: 0
+            duration: 300
+            easing.type: Easing.InCubic
+        }
+
         ScriptAction {
             script: {
+                card.visible = false;
                 if (card.pendingSignal)
                     card.pendingSignal();
             }

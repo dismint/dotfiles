@@ -67,36 +67,12 @@ PopupWindow {
         Rectangle {
             id: panel
 
-            property real displayHeight: popupClip.panelHeight
-
             width: popup.menuWidth
-            height: displayHeight
+            height: popupClip.height
             radius: 4
             color: Colors.surface
             border.color: Colors.primary
             border.width: 2
-
-            Connections {
-                target: popupClip
-                function onPanelHeightChanged() {
-                    if (popupClip.panelHeight < panel.displayHeight) {
-                        shrinkAnimation.from = panel.displayHeight;
-                        shrinkAnimation.to = popupClip.panelHeight;
-                        shrinkAnimation.start();
-                    } else {
-                        shrinkAnimation.stop();
-                        panel.displayHeight = popupClip.panelHeight;
-                    }
-                }
-            }
-
-            NumberAnimation {
-                id: shrinkAnimation
-                target: panel
-                property: "displayHeight"
-                duration: 300
-                easing.type: Easing.OutCubic
-            }
 
             Flickable {
                 id: notifFlickable
@@ -176,6 +152,7 @@ PopupWindow {
                             notifAppIcon: appIcon
                             notifImage: image
                             width: notifColumn.width
+                            animateEntrance: popup.animateOpen
                             onDismissed: popup.dismissRequested(index)
                             onActivated: popup.actionRequested(index)
                         }
