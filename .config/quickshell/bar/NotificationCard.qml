@@ -212,14 +212,6 @@ Item {
             }
         }
 
-        NumberAnimation {
-            target: card
-            property: "height"
-            to: 0
-            duration: 300
-            easing.type: Easing.InCubic
-        }
-
         ScriptAction {
             script: {
                 card.visible = false;

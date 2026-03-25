@@ -32,19 +32,47 @@ PopupWindow {
         id: popupClip
 
         property real panelHeight: Math.min(Math.max(minHeight, notifColumn.height + 16), maxHeight)
+        property real displayHeight: panelHeight
         property bool openCloseAnimating: false
 
         anchors.left: parent.left
         anchors.right: parent.right
-        height: popup.animateOpen ? panelHeight : 0
+        height: popup.animateOpen ? displayHeight : 0
         opacity: popup.animateOpen ? 1.0 : 0.0
         clip: true
+
+        onPanelHeightChanged: {
+            if (!popup.animateOpen)
+                return;
+            if (panelHeight >= displayHeight) {
+                shrinkAnimation.stop();
+                displayHeight = panelHeight;
+            } else {
+                if (shrinkAnimation.running) {
+                    shrinkAnimation.to = panelHeight;
+                } else {
+                    shrinkAnimation.from = displayHeight;
+                    shrinkAnimation.to = panelHeight;
+                    shrinkAnimation.start();
+                }
+            }
+        }
 
         Connections {
             target: popup
             function onAnimateOpenChanged() {
+                if (popup.animateOpen)
+                    popupClip.displayHeight = popupClip.panelHeight;
                 popupClip.openCloseAnimating = true;
             }
+        }
+
+        NumberAnimation {
+            id: shrinkAnimation
+            target: popupClip
+            property: "displayHeight"
+            duration: 300
+            easing.type: Easing.OutCubic
         }
 
         Behavior on height {
@@ -96,6 +124,14 @@ PopupWindow {
                     id: notifColumn
                     width: parent.width
                     spacing: 6
+
+                    move: Transition {
+                        NumberAnimation {
+                            properties: "y"
+                            duration: 300
+                            easing.type: Easing.OutCubic
+                        }
+                    }
 
                     Rectangle {
                         id: clearAllButton
