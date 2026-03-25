@@ -46,7 +46,7 @@ PanelWindow {
         onNotification: notification => {
             notification.tracked = true;
             var notifId = notification.id;
-            notification.closed.connect(function(reason) {
+            notification.closed.connect(function (reason) {
                 if (reason === 3 || reason === "CloseRequested")
                     notificationCenter.handleRemoteClose(notifId);
             });
