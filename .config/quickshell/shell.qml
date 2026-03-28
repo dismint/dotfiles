@@ -5,6 +5,8 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Notifications
+import Quickshell.Services.Pipewire
+import Quickshell.Services.Mpris
 
 import "bar" as Bar
 
@@ -234,16 +236,17 @@ PanelWindow {
 
     Bar.NotificationCenter {
         id: notificationCenter
-        anchors.right: systrayContent.left
+        anchors.right: audioPanel.left
         anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
         parentWindow: panel
-        systrayWidth: systrayContent.width + 16
+        systrayWidth: audioPanel.collapsedWidth + 8 + systrayContent.width + 16
 
         bellMouse.onClicked: {
+            audioPanel.closePopup();
             systrayContent.closeMenu();
             systrayContent.expanded = false;
-            notificationCenter.togglePopup(notificationPopup, systrayContent.collapsedWidth + 16);
+            notificationCenter.togglePopup(notificationPopup, audioPanel.collapsedWidth + 8 + systrayContent.collapsedWidth + 16);
         }
     }
 
@@ -266,6 +269,23 @@ PanelWindow {
         }
     }
 
+    Bar.AudioPanel {
+        id: audioPanel
+        anchors.right: systrayContent.left
+        anchors.rightMargin: 8
+        anchors.verticalCenter: parent.verticalCenter
+        parentWindow: panel
+        systrayWidth: systrayContent.width + 16
+        notifWidth: notificationCenter.width + 8
+
+        buttonMouse.onClicked: {
+            notificationCenter.closePopup();
+            systrayContent.closeMenu();
+            systrayContent.expanded = false;
+            audioPanel.togglePopup(audioPopup, systrayContent.collapsedWidth + 16);
+        }
+    }
+
     Bar.SystrayContent {
         id: systrayContent
         anchors.right: parent.right
@@ -273,8 +293,10 @@ PanelWindow {
         anchors.verticalCenter: parent.verticalCenter
         parentWindow: panel
         onExpandedChanged: {
-            if (expanded)
+            if (expanded) {
                 notificationCenter.closePopup();
+                audioPanel.closePopup();
+            }
         }
     }
 }

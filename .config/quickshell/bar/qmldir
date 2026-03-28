@@ -12,3 +12,5 @@ SystrayContextMenuItem 1.0 SystrayContextMenuItem.qml
 NotificationCenter 1.0 NotificationCenter.qml
 NotificationPopup 1.0 NotificationPopup.qml
 NotificationCard 1.0 NotificationCard.qml
+AudioPanel 1.0 AudioPanel.qml
+AudioPopup 1.0 AudioPopup.qml
