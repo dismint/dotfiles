@@ -729,7 +729,7 @@ PopupWindow {
                                 width: 72
                                 height: 72
                                 radius: 6
-                                color: Colors.background
+                                color: "transparent"
                                 clip: true
 
                                 Image {
