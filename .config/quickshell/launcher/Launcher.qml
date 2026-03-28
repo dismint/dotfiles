@@ -248,7 +248,7 @@ PanelWindow {
     Rectangle {
         id: backdrop
         anchors.fill: parent
-        color: "#000000"
+        color: launcher.bgColor
         opacity: 0
 
         MouseArea {
