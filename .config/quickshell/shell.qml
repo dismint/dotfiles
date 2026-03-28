@@ -9,6 +9,7 @@ import Quickshell.Services.Pipewire
 import Quickshell.Services.Mpris
 
 import "bar" as Bar
+import "launcher" as Launcher
 
 PanelWindow {
     id: panel
@@ -299,4 +300,6 @@ PanelWindow {
             }
         }
     }
+
+    Launcher.Launcher {}
 }
