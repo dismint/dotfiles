@@ -97,7 +97,7 @@ PopupWindow {
     Item {
         id: popupClip
 
-        property real panelHeight: Math.min(Math.max(120, contentColumn.height + 16), popup.maxHeight)
+        property real panelHeight: Math.min(Math.max(120, contentColumn.height + 24), popup.maxHeight)
         property real displayHeight: panelHeight
         property bool openCloseAnimating: false
 
@@ -171,7 +171,7 @@ PopupWindow {
             Flickable {
                 id: contentFlickable
                 anchors.fill: parent
-                anchors.margins: 8
+                anchors.margins: 12
                 contentHeight: contentColumn.height
                 clip: true
                 boundsBehavior: Flickable.StopAtBounds
