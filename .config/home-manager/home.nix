@@ -55,8 +55,8 @@
     lua-language-server
     neovim
     nixfmt
-    nodePackages.typescript
-    nodePackages.typescript-language-server
+    typescript
+    typescript-language-server
     nodejs_24
     openssh
     pastel
