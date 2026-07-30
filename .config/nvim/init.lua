@@ -211,18 +211,22 @@ require("lazy").setup({
 	},
 	{
 		"nvim-treesitter/nvim-treesitter",
+		branch = "main",
+		lazy = false,
 		build = ":TSUpdate",
-		opts = {
-			ensure_installed = { "lua", "python", "zig" },
-			auto_install = true,
-			highlight = {
-				enable = true,
-			},
-			indent = { enable = true },
-		},
-		config = function(_, opts)
-			require("nvim-treesitter.install").prefer_git = true
-			require("nvim-treesitter.configs").setup(opts)
+		config = function()
+			require("nvim-treesitter").install({ "lua", "python", "zig" })
+
+			vim.api.nvim_create_autocmd("FileType", {
+				callback = function(args)
+					local lang = vim.treesitter.language.get_lang(args.match) or args.match
+					if not vim.treesitter.language.add(lang) then
+						return
+					end
+					vim.treesitter.start(args.buf)
+					vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+				end,
+			})
 		end,
 	},
 	{
@@ -564,7 +568,7 @@ require("lazy").setup({
 		},
 	},
 	{
-		"ggandor/leap.nvim",
+		"https://codeberg.org/andyg/leap.nvim",
 		config = function()
 			local leap = require("leap")
 
@@ -576,22 +580,6 @@ require("lazy").setup({
 			end, "leap backwards", {})
 
 			leap.opts.case_sensitive = true
-		end,
-	},
-	{
-		"zbirenbaum/copilot.lua",
-		cmd = "Copilot",
-		event = "InsertEnter",
-		config = function()
-			require("copilot").setup({
-				suggestion = {
-					keymap = {
-						next = "<M-f>",
-						prev = "<M-g>",
-						accept = "<M-o>",
-					},
-				},
-			})
 		end,
 	},
 	{

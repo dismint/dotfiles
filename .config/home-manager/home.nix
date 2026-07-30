@@ -73,6 +73,7 @@
     svelte-language-server
     svg-term
     tmux
+    tree-sitter
     typescript-language-server
     unzip
     uv

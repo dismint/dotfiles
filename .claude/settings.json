@@ -1,0 +1,6 @@
+{
+  "tui": "default",
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark",
+  "model": "sonnet"
+}
