@@ -34,7 +34,6 @@ find_position = {}
 
 tab_active = { reversed = true }
 tab_inactive = {}
-tab_width = 1
 
 count_copied = { fg = "#181616", bg = "#8a9a7b" }
 count_cut = { fg = "#181616", bg = "#e46876" }
@@ -126,12 +125,12 @@ rules = [
     { mime = "application/{pdf,doc,rtf,vnd.*}", fg = "#6a9589" },
 
     # broken links
-    { name = "*", is = "orphan", fg = "#c4746e" },
+    { url = "*", is = "orphan", fg = "#c4746e" },
 
     # executables
-    { name = "*", is = "exec", fg = "#76946a" },
+    { url = "*", is = "exec", fg = "#76946a" },
 
     # fallback
-    { name = "*", fg = "#c5c9c5" },
-    { name = "*/", fg = "#8ba4b0" },
+    { url = "*", fg = "#c5c9c5" },
+    { url = "*/", fg = "#8ba4b0" },
 ]
