@@ -742,12 +742,16 @@ require("lazy").setup({
 			}
 		end,
 	},
+	{
+		"zk-org/zk-nvim",
+		name = "zk",
+		opts = {},
+	},
 	{ "kevinhwang91/nvim-bqf", ft = "qf" },
 	{ "dstein64/nvim-scrollview", opts = {} },
 	{ "brenoprata10/nvim-highlight-colors", opts = {} },
 	{ "lewis6991/gitsigns.nvim", opts = {} },
 	"tpope/vim-fugitive",
-	"mbbill/undotree",
 })
 
 -- set command line height to 0
